@@ -2,10 +2,19 @@
 *.exe
 *.out
 *.obj
+*.pdb
+
+# Build folders
+Debug/
+Release/
+x64/
 
 # VS / VSCode
 .vs/
 .vscode/
+
+# Visual Studio user settings
+*.vcxproj.user
 
 # OS
 .DS_Store

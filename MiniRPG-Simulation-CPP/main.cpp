@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Components.h"
 #include "MathUtils.h"
+#include "EncounterSystem.h"
 
 int main()
 {
@@ -32,7 +33,7 @@ int main()
         float dist = Distance(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y);
         std::cout << "Distance to Enemy: " << dist << "\n";
 
-        if (dist < 1.5f)
+        if (EncounterSystem::CheckEncounter(playerPos, enemyPos, 1.5f))
         {
             std::cout << "\nENCOUNTER TRIGGERED!\n";
             break;
