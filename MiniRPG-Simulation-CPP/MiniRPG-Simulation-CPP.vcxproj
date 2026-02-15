@@ -130,6 +130,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\CombatRules.cpp" />
+    <ClCompile Include="src\CombatSystem.cpp" />
     <ClCompile Include="src\EncounterSystem.cpp" />
     <ClCompile Include="src\TestCombat.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -138,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CombatRules.h" />
+    <ClInclude Include="include\CombatSystem.h" />
     <ClInclude Include="include\Components.h" />
     <ClInclude Include="include\EncounterSystem.h" />
     <ClInclude Include="include\Entity.h" />

@@ -8,6 +8,8 @@
 #include "MathUtils.h"
 #include "EncounterSystem.h"
 #include "PlayerMovementSystem.h"
+#include "GameState.h"
+#include "CombatSystem.h"
 
 int main()
 {
@@ -41,9 +43,10 @@ int main()
                 << ")\n";
     }
 
-    bool running = true;
+    //bool running = true;
+    GameState gameState = GameState::Exploration;
 
-    while (running)
+    while (gameState != GameState::Exit)
     {
         std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
         for (int i = 0; i < enemies.size(); i++)
@@ -58,20 +61,22 @@ int main()
             if (EncounterSystem::CheckEncounter(playerPos, enemies[i], 1.5f))
             {
                 std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
-                running = false;
+                CombatSystem::StartCombat(playerPos, enemies[i]);
+                gameState = GameState::Exit;
                 break;
             }
         }
-        if (!running) break;
-
+        // INPUT
         std::cout << "\nMove (W/A/S/D) or Q to quit: ";
         char input;
         std::cin >> input;
-        if (input == 'q') running = false;
-
-        //running = PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
+        if (input == 'q')
+        {
+            gameState = GameState::Exit;
+            break;
+        }
         PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
     }
-
+    if (gameState == GameState::Exit) return 0;
     return 0;
 }
