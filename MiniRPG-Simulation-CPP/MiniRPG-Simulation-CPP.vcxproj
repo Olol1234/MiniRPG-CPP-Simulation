@@ -133,6 +133,7 @@
     <ClInclude Include="include\EncounterSystem.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\MathUtils.h" />
+    <ClInclude Include="include\PlayerMovementSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

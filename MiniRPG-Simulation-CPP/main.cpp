@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 #include "Entity.h"
 #include "Components.h"
@@ -17,27 +18,50 @@ int main()
     PositionComponent playerPos{ 0.0f, 0.0f };
 
     // ===== ENEMY =====
-    Entity enemy = 2;
-    PositionComponent enemyPos{
-        (float)(rand() % 10 - 5),
-        (float)(rand() % 10 - 5)
-    };
+    std::vector<PositionComponent> enemies;
+    int enemyCount = 5;
+    for (int i = 0; i < enemyCount; i++)
+    {
+        PositionComponent enemyPos
+        {
+            (float)(rand() % 20 - 10),
+            (float)(rand() % 20 - 10)
+        };
+        enemies.push_back(enemyPos);
+    }
+
+    // ===== PRINT ENEMIES POS TO CHECK =====
+    std::cout << "\nEnemies\n";
+    for (int i = 0; i < enemies.size(); i++)
+    {
+        std::cout << "Enemy " << i
+                << ": (" << enemies[i].x
+                << ", " << enemies[i].y
+                << ")\n";
+    }
 
     bool running = true;
 
     while (running)
     {
         std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
-        std::cout << "Enemy Position: (" << enemyPos.x << ", " << enemyPos.y << ")\n";
-
-        float dist = Distance(playerPos.x, playerPos.y, enemyPos.x, enemyPos.y);
-        std::cout << "Distance to Enemy: " << dist << "\n";
-
-        if (EncounterSystem::CheckEncounter(playerPos, enemyPos, 1.5f))
+        for (int i = 0; i < enemies.size(); i++)
         {
-            std::cout << "\nENCOUNTER TRIGGERED!\n";
-            break;
+            float dist = Distance(
+                playerPos.x,
+                playerPos.y,
+                enemies[i].x,
+                enemies[i].y
+            );
+            std::cout << "Distance to Enemy " << i << ": " << dist << "\n";
+            if (EncounterSystem::CheckEncounter(playerPos, enemies[i], 1.5f))
+            {
+                std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
+                running = false;
+                break;
+            }
         }
+
 
         std::cout << "\nMove (W/A/S/D) or Q to quit: ";
         char input;
