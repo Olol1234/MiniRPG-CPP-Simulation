@@ -14,5 +14,5 @@ bool EncounterSystem::CheckEncounter(
         enemyPos.y
     );
 
-    return distance < triggerDistance;
+    return distance <= triggerDistance;
 }

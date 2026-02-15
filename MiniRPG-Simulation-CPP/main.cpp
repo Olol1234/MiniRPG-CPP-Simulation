@@ -7,6 +7,7 @@
 #include "Components.h"
 #include "MathUtils.h"
 #include "EncounterSystem.h"
+#include "PlayerMovementSystem.h"
 
 int main()
 {
@@ -61,21 +62,15 @@ int main()
                 break;
             }
         }
-
+        if (!running) break;
 
         std::cout << "\nMove (W/A/S/D) or Q to quit: ";
         char input;
         std::cin >> input;
+        if (input == 'q') running = false;
 
-        switch (input)
-        {
-        case 'w': playerPos.y += 1; break;
-        case 's': playerPos.y -= 1; break;
-        case 'a': playerPos.x -= 1; break;
-        case 'd': playerPos.x += 1; break;
-        case 'q': running = false; break;
-        default: break;
-        }
+        //running = PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
+        PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
     }
 
     return 0;
