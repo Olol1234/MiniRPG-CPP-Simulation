@@ -1,0 +1,6 @@
+{
+  "name": "Goblin",
+  "baseMaxHP": 50,
+  "baseAttack": 8,
+  "baseDefense": 5
+}
