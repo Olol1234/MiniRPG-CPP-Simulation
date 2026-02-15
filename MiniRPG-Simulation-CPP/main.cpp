@@ -10,6 +10,8 @@
 #include "PlayerMovementSystem.h"
 #include "GameState.h"
 #include "CombatSystem.h"
+#include "DefinitionLoader.h"
+#include "CombatStatsComponent.h"
 
 int main()
 {
@@ -19,6 +21,26 @@ int main()
     // ===== PLAYER =====
     Entity player = 1;
     PositionComponent playerPos{ 0.0f, 0.0f };
+
+    // Loader
+    CharacterDefinition playerDefinition = LoadCharacterDefinition("data/player.json");
+    CharacterDefinition enemyGoblinDefinition = LoadCharacterDefinition("data/enemy_goblin.json");
+
+    // === PLAYER RUNTIME STAT ===
+    CombatStatsComponent playerStats;
+    playerStats.characterDefinition = &playerDefinition;
+    playerStats.currentHP = playerDefinition.baseMaxHP;
+
+    // === ENEMY RUNTIME STAT ===
+    std::vector<CombatStatsComponent> enemyStats;
+    for (int i = 0; i < 5; i++)
+    {
+        CombatStatsComponent e;
+        e.characterDefinition = &enemyGoblinDefinition;
+        e.currentHP = enemyGoblinDefinition.baseMaxHP;
+
+        enemyStats.push_back(e);
+    }
 
     // ===== ENEMY =====
     std::vector<PositionComponent> enemies;

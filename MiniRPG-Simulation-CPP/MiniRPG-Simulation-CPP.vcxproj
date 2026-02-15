@@ -131,6 +131,7 @@
     </ClCompile>
     <ClCompile Include="src\CombatRules.cpp" />
     <ClCompile Include="src\CombatSystem.cpp" />
+    <ClCompile Include="src\DefinitionLoader.cpp" />
     <ClCompile Include="src\EncounterSystem.cpp" />
     <ClCompile Include="src\TestCombat.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -139,13 +140,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CombatRules.h" />
+    <ClInclude Include="include\CombatStatsComponent.h" />
     <ClInclude Include="include\CombatSystem.h" />
     <ClInclude Include="include\Components.h" />
+    <ClInclude Include="include\DefinitionLoader.h" />
+    <ClInclude Include="include\Definitions.h" />
     <ClInclude Include="include\EncounterSystem.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GameState.h" />
+    <ClInclude Include="include\json.hpp" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\PlayerMovementSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\enemy_goblin.json" />
+    <None Include="data\player.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

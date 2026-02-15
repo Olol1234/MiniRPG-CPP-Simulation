@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Definition">
+      <UniqueIdentifier>{50036fe6-402d-4a41-8f48-4b861c2dc86c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{961f5107-e933-4349-ba97-268a709a8844}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EncounterSystem.cpp">
@@ -30,11 +36,11 @@
     <ClCompile Include="src\CombatSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DefinitionLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\EncounterSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -56,5 +62,28 @@
     <ClInclude Include="include\CombatSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Definitions.h">
+      <Filter>Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CombatStatsComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DefinitionLoader.h">
+      <Filter>Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\player.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\enemy_goblin.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
