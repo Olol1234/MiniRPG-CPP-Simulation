@@ -39,26 +39,28 @@ int main()
     playerStats.currentHP = playerDefinition->baseMaxHP;
 
     // === ENEMY RUNTIME STAT ===
-    const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
-    if (!enemyGoblinDef)
-    {
-        std::cout << "Failed to get enemyGoblinDef.\n";
-        return 1;
-    }
-    std::vector<CombatStatsComponent> enemyStats;
-    for (int i = 0; i < 5; i++)
-    {
-        CombatStatsComponent e;
-        e.characterDefinition = enemyGoblinDef;
-        e.currentHP = enemyGoblinDef->baseMaxHP;
+    //const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
+    //if (!enemyGoblinDef)
+    //{
+    //    std::cout << "Failed to get enemyGoblinDef.\n";
+    //    return 1;
+    //}
+    //std::vector<CombatStatsComponent> enemyStats;
+    //enemyStats.reserve(5);
+    //for (size_t i = 0; i < 5; i++)
+    //{
+    //    CombatStatsComponent e;
+    //    e.characterDefinition = enemyGoblinDef;
+    //    e.currentHP = enemyGoblinDef->baseMaxHP;
 
-        enemyStats.push_back(e);
-    }
+    //    enemyStats.push_back(e);
+    //}
 
-    // ===== ENEMY =====
+    // ===== SPAWN ENEMY =====
     std::vector<PositionComponent> enemies;
-    int enemyCount = 5;
-    for (int i = 0; i < enemyCount; i++)
+    enemies.reserve(5);
+    //int enemyCount = 5;
+    for (size_t i = 0; i < 5; i++)
     {
         PositionComponent enemyPos
         {
@@ -112,6 +114,7 @@ int main()
         }
         PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
     }
+
     if (gameState == GameState::Exit) return 0;
     return 0;
 }
