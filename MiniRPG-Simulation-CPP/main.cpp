@@ -10,7 +10,7 @@
 #include "PlayerMovementSystem.h"
 #include "GameState.h"
 #include "CombatSystem.h"
-#include "DefinitionLoader.h"
+#include "DefinitionManager.h"
 #include "CombatStatsComponent.h"
 
 int main()
@@ -23,21 +23,24 @@ int main()
     PositionComponent playerPos{ 0.0f, 0.0f };
 
     // Loader
-    CharacterDefinition playerDefinition = LoadCharacterDefinition("data/player.json");
-    CharacterDefinition enemyGoblinDefinition = LoadCharacterDefinition("data/enemy_goblin.json");
+    DefinitionManager defManager;
+    defManager.LoadCharacterDef("player", "data/player.json");
+    defManager.LoadCharacterDef("enemy_goblin", "data/enemy_goblin.json");
 
     // === PLAYER RUNTIME STAT ===
+    const CharacterDefinition* playerDefinition = defManager.GetCharacterDef("player");
     CombatStatsComponent playerStats;
-    playerStats.characterDefinition = &playerDefinition;
-    playerStats.currentHP = playerDefinition.baseMaxHP;
+    playerStats.characterDefinition = playerDefinition;
+    playerStats.currentHP = playerDefinition->baseMaxHP;
 
     // === ENEMY RUNTIME STAT ===
+    const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
     std::vector<CombatStatsComponent> enemyStats;
     for (int i = 0; i < 5; i++)
     {
         CombatStatsComponent e;
-        e.characterDefinition = &enemyGoblinDefinition;
-        e.currentHP = enemyGoblinDefinition.baseMaxHP;
+        e.characterDefinition = enemyGoblinDef;
+        e.currentHP = enemyGoblinDef->baseMaxHP;
 
         enemyStats.push_back(e);
     }

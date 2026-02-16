@@ -36,7 +36,7 @@
     <ClCompile Include="src\CombatSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DefinitionLoader.cpp">
+    <ClCompile Include="src\DefinitionManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,11 +71,11 @@
     <ClInclude Include="include\CombatStatsComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\DefinitionLoader.h">
-      <Filter>Definition</Filter>
-    </ClInclude>
     <ClInclude Include="include\json.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DefinitionManager.h">
+      <Filter>Definition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
