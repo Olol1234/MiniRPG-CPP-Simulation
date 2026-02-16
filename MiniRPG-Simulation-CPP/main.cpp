@@ -29,12 +29,22 @@ int main()
 
     // === PLAYER RUNTIME STAT ===
     const CharacterDefinition* playerDefinition = defManager.GetCharacterDef("player");
+    if (!playerDefinition)
+    {
+        std::cout << "Failed to get playerDefinition.\n";
+        return 1;
+    }
     CombatStatsComponent playerStats;
     playerStats.characterDefinition = playerDefinition;
     playerStats.currentHP = playerDefinition->baseMaxHP;
 
     // === ENEMY RUNTIME STAT ===
     const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
+    if (!enemyGoblinDef)
+    {
+        std::cout << "Failed to get enemyGoblinDef.\n";
+        return 1;
+    }
     std::vector<CombatStatsComponent> enemyStats;
     for (int i = 0; i < 5; i++)
     {
