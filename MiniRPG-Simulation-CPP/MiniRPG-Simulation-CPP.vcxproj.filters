@@ -53,9 +53,6 @@
     <ClInclude Include="include\PlayerMovementSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CombatRules.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -76,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="include\DefinitionManager.h">
       <Filter>Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CombatRules.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

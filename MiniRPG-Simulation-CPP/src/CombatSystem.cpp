@@ -1,22 +1,28 @@
 #include "CombatRules.h"
 #include "CombatSystem.h"
+#include "CombatStatsComponent.h"
+#include "Definitions.h"
 #include <iostream>
 
 void CombatSystem::StartCombat(
-	PositionComponent& playerPos,
-	PositionComponent& enemyPos
+	CombatStatsComponent& playerStats,
+	const CharacterDefinition* enemyDef
 )
 {
-	int playerHP = 20;
-	int enemyHP = 10;
+	CombatStatsComponent enemyStats;
+	enemyStats.characterDefinition = enemyDef;
+	enemyStats.currentHP = enemyDef->baseMaxHP;
 
-	int playerAttack = 8;
-	int enemyAttack = 6;
+	int& playerHP = playerStats.currentHP;
+	int enemyHP = enemyStats.currentHP;
 
-	int playerDefense = 3;
-	int enemyDefense = 2;
+	int playerAttack = playerStats.characterDefinition->baseAttack;
+	int enemyAttack = enemyDef->baseAttack;
 
-	std::cout << "\n=== COMBAT START ===\N";
+	int playerDefense = playerStats.characterDefinition->baseDefense;
+	int enemyDefense = enemyDef->baseDefense;
+
+	std::cout << "\n=== COMBAT START ===\n";
 	while (playerHP > 0 && enemyHP > 0)
 	{
 		int dmgToEnemy = CombatRules::CalculateDamage(playerAttack, enemyDefense);

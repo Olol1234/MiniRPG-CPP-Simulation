@@ -38,28 +38,15 @@ int main()
     playerStats.characterDefinition = playerDefinition;
     playerStats.currentHP = playerDefinition->baseMaxHP;
 
-    // === ENEMY RUNTIME STAT ===
-    //const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
-    //if (!enemyGoblinDef)
-    //{
-    //    std::cout << "Failed to get enemyGoblinDef.\n";
-    //    return 1;
-    //}
-    //std::vector<CombatStatsComponent> enemyStats;
-    //enemyStats.reserve(5);
-    //for (size_t i = 0; i < 5; i++)
-    //{
-    //    CombatStatsComponent e;
-    //    e.characterDefinition = enemyGoblinDef;
-    //    e.currentHP = enemyGoblinDef->baseMaxHP;
-
-    //    enemyStats.push_back(e);
-    //}
-
     // ===== SPAWN ENEMY =====
-    std::vector<PositionComponent> enemies;
+    const CharacterDefinition* enemyGoblinDef = defManager.GetCharacterDef("enemy_goblin");
+    if (!enemyGoblinDef)
+    {
+        std::cout << "Failed to get enemy definition\n";
+        return 1;
+    }
+    std::vector<WorldEnemy> enemies;
     enemies.reserve(5);
-    //int enemyCount = 5;
     for (size_t i = 0; i < 5; i++)
     {
         PositionComponent enemyPos
@@ -67,7 +54,10 @@ int main()
             (float)(rand() % 20 - 10),
             (float)(rand() % 20 - 10)
         };
-        enemies.push_back(enemyPos);
+        WorldEnemy enemy;
+        enemy.position = enemyPos;
+        enemy.enemyDef = enemyGoblinDef;
+        enemies.push_back(enemy);
     }
 
     // ===== PRINT ENEMIES POS TO CHECK =====
@@ -75,8 +65,8 @@ int main()
     for (int i = 0; i < enemies.size(); i++)
     {
         std::cout << "Enemy " << i
-                << ": (" << enemies[i].x
-                << ", " << enemies[i].y
+                << ": (" << enemies[i].position.x
+                << ", " << enemies[i].position.y
                 << ")\n";
     }
 
@@ -91,14 +81,14 @@ int main()
             float dist = Distance(
                 playerPos.x,
                 playerPos.y,
-                enemies[i].x,
-                enemies[i].y
+                enemies[i].position.x,
+                enemies[i].position.y
             );
             std::cout << "Distance to Enemy " << i << ": " << dist << "\n";
-            if (EncounterSystem::CheckEncounter(playerPos, enemies[i], 1.5f))
+            if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
             {
                 std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
-                CombatSystem::StartCombat(playerPos, enemies[i]);
+                CombatSystem::StartCombat(playerStats, enemies[i].enemyDef);
                 gameState = GameState::Exit;
                 break;
             }
