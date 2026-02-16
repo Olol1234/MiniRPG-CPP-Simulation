@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Components.h"
+#include "Definitions.h"
+#include "CombatStatsComponent.h"
 
 class CombatSystem
 {
 public:
 	static void StartCombat(
-		PositionComponent& playerPos,
-		PositionComponent& enemyPos
+		CombatStatsComponent& playerStats,
+		const CharacterDefinition* enemyDef
 	);
 };
