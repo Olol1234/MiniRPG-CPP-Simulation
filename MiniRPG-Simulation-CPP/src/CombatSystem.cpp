@@ -27,21 +27,6 @@ CombatResult CombatSystem::StartCombat(
 	CombatTurn currentTurn = CombatTurn::Player;
 
 	std::cout << "\n=== COMBAT START ===\n";
-	//while (playerHP > 0 && enemyHP > 0)
-	//{
-	//	int dmgToEnemy = CombatRules::CalculateDamage(playerAttack, enemyDefense);
-	//	enemyHP -= dmgToEnemy;
-	//	std::cout << "Player deals " << dmgToEnemy << " damage. Enemy HP: " << enemyHP << "\n";
-	//	if (enemyHP <= 0) break;
-
-	//	int dmgToPlayer = CombatRules::CalculateDamage(enemyAttack, playerDefense);
-	//	playerHP -= dmgToPlayer;
-	//	std::cout << "Enemy deals " << dmgToPlayer << " damage. Player HP: " << playerHP << "\n";
-	//}
-	//if (playerHP > 0)
-	//	std::cout << "Player wins!\n";
-	//else
-	//	std::cout << "Player loses!\n";
 
 	while (playerHP > 0 && enemyHP > 0)
 	{
