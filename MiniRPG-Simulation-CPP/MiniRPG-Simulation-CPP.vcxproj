@@ -139,6 +139,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CombatAction.h" />
     <ClInclude Include="include\CombatResult.h" />
     <ClInclude Include="include\CombatRules.h" />
     <ClInclude Include="include\CombatStatsComponent.h" />

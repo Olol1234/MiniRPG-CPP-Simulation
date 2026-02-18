@@ -1,6 +1,6 @@
 {
   "name": "Player",
   "baseMaxHP": 100,
-  "baseAttack": 10,
+  "baseAttack": 25,
   "baseDefense": 5
 }
