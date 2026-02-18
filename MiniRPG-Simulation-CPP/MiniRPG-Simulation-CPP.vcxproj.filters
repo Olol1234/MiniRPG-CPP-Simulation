@@ -77,6 +77,12 @@
     <ClInclude Include="include\CombatRules.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\CombatTurn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CombatResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\player.json">

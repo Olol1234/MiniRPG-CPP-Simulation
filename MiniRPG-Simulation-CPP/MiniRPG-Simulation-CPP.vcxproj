@@ -139,9 +139,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CombatResult.h" />
     <ClInclude Include="include\CombatRules.h" />
     <ClInclude Include="include\CombatStatsComponent.h" />
     <ClInclude Include="include\CombatSystem.h" />
+    <ClInclude Include="include\CombatTurn.h" />
     <ClInclude Include="include\Components.h" />
     <ClInclude Include="include\DefinitionManager.h" />
     <ClInclude Include="include\Definitions.h" />

@@ -12,6 +12,7 @@
 #include "CombatSystem.h"
 #include "DefinitionManager.h"
 #include "CombatStatsComponent.h"
+#include "CombatResult.h"
 
 int main()
 {
@@ -88,8 +89,28 @@ int main()
             if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
             {
                 std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
-                CombatSystem::StartCombat(playerStats, enemies[i].enemyDef);
-                gameState = GameState::Exit;
+                CombatResult result = CombatSystem::StartCombat(playerStats, enemies[i].enemyDef);
+                if (result == CombatResult::PlayerWin)
+                {
+                    std::cout << "Enemy defeated!\n";
+
+                    enemies.erase(enemies.begin() + i);
+                    i--;
+                    // Print enemy pos again
+                    std::cout << "\nEnemies\n";
+                    for (int i = 0; i < enemies.size(); i++)
+                    {
+                        std::cout << "Enemy " << i
+                            << ": (" << enemies[i].position.x
+                            << ", " << enemies[i].position.y
+                            << ")\n";
+                    }
+                }
+                else
+                {
+                    std::cout << "Player died. Game Over.\n";
+                    gameState = GameState::Exit;
+                }
                 break;
             }
         }
@@ -103,6 +124,7 @@ int main()
             break;
         }
         PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
+        std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
     }
 
     if (gameState == GameState::Exit) return 0;
