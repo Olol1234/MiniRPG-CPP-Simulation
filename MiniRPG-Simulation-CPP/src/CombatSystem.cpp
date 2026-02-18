@@ -30,30 +30,44 @@ CombatResult CombatSystem::StartCombat(
 
 	while (playerHP > 0 && enemyHP > 0)
 	{
+		StartTurn(currentTurn);
+
+		CombatAction action;
+
 		if (currentTurn == CombatTurn::Player)
 		{
-			std::cout << "\n--- Player Turn ---\n";
-
-			int dmg = CombatRules::CalculateDamage(playerAttack, enemyDefense);
-			enemyHP -= dmg;
-
-			std::cout << "Player deals " << dmg
-				<< " damage. Enemy HP: " << enemyHP << "\n";
-
-			currentTurn = CombatTurn::Enemy;
+			action = ChoosePlayerAction();
+			ExecuteAction(
+				action,
+				playerHP,
+				enemyHP,
+				playerAttack,
+				enemyDefense,
+				true
+			);
+			std::cout << "Enemy HP left " << enemyHP << "\n";
 		}
 		else
 		{
-			std::cout << "\n--- Enemy Turn ---\n";
+			action = ChooseEnemyAction();
 
-			int dmg = CombatRules::CalculateDamage(enemyAttack, playerDefense);
-			playerHP -= dmg;
-
-			std::cout << "Enemy deals " << dmg
-				<< " damage. Player HP: " << playerHP << "\n";
-
-			currentTurn = CombatTurn::Player;
+			ExecuteAction(
+				action,
+				enemyHP,
+				playerHP,
+				enemyAttack,
+				playerDefense,
+				false
+			);
+			std::cout << "Player HP left " << playerHP << "\n";
 		}
+		EndTurn(currentTurn);
+
+		// Switch Turn
+		if (currentTurn == CombatTurn::Player)
+			currentTurn = CombatTurn::Enemy;
+		else
+			currentTurn = CombatTurn::Player;
 	}
 
 	if (playerHP > 0)
@@ -68,9 +82,10 @@ CombatResult CombatSystem::StartCombat(
 	}
 
 	std::cout << "=== COMBAT END ===\n";
+
 }
 
-void StartTurn(CombatTurn turn)
+void CombatSystem::StartTurn(CombatTurn turn)
 {
 	if (turn == CombatTurn::Player)
 		std::cout << "Player prepares action...\n";
@@ -78,10 +93,55 @@ void StartTurn(CombatTurn turn)
 		std::cout << "Enemy prepares action...\n";
 }
 
-void EndTurn(CombatTurn turn)
+void CombatSystem::EndTurn(CombatTurn turn)
 {
 	if (turn == CombatTurn::Player)
 		std::cout << "Player turn ends.\n";
 	else
 		std::cout << "Enemy turn ends.\n";
+}
+
+CombatAction CombatSystem::ChoosePlayerAction()
+{
+	std::cout << "\nChoose Action:\n";
+	std::cout << "1. Attack\n";
+	std::cout << "2. Defend (not implemented)\n";
+	std::cout << "3. Run (not implemented)\n";
+
+	int input;
+	std::cin >> input;
+
+	if (input == 1) return CombatAction::Attack;
+
+	return CombatAction::Attack; // fallback
+}
+
+CombatAction CombatSystem::ChooseEnemyAction()
+{
+	return CombatAction::Attack;
+}
+
+void CombatSystem::ExecuteAction(
+	CombatAction action,
+	int& attackerHP,
+	int& defenderHP,
+	int attackerAttack,
+	int defenderDefense,
+	bool isPlayerAttacker
+)
+{
+	if (action == CombatAction::Attack)
+	{
+		int dmg = CombatRules::CalculateDamage(attackerAttack, defenderDefense);
+		defenderHP -= dmg;
+
+		if (isPlayerAttacker)
+		{
+			std::cout << "Player attacks for " << dmg << "\n";
+		}
+		else
+		{
+			std::cout << "Enemy attacks for " << dmg << "\n";
+		}
+	}
 }
