@@ -5,6 +5,15 @@
 #include "CombatTurn.h"
 #include "CombatResult.h"
 #include <iostream>
+#include <SFML/Graphics.hpp>
+
+CombatSystem::CombatSystem()
+{
+	if (!font.loadFromFile("data/arial.ttf"))
+	{
+		std::cout << "Failed to load font!\n";
+	}
+}
 
 CombatResult CombatSystem::StartCombat(
 	CombatStatsComponent& playerStats,
@@ -144,4 +153,137 @@ void CombatSystem::ExecuteAction(
 			std::cout << "Enemy attacks for " << dmg << "\n";
 		}
 	}
+}
+
+void CombatSystem::BeginCombat(
+	CombatStatsComponent& player,
+	const CharacterDefinition* enemyDefinition
+)
+{
+	combatPhase = CombatPhase::PlayerChoosing;
+
+	playerStats = &player;
+	enemyDef = enemyDefinition;
+
+	playerHP = player.currentHP;
+	enemyHP = enemyDefinition->baseMaxHP;
+
+	currentTurn = CombatTurn::Player;
+	combatFinished = false;
+}
+
+void CombatSystem::Update(float dt)
+{
+	if (combatFinished) return;
+
+	if (currentTurn == CombatTurn::Player)
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		{
+			int dmg = CombatRules::CalculateDamage(
+				playerStats->characterDefinition->baseAttack,
+				enemyDef->baseDefense
+			);
+			enemyHP -= dmg;
+			currentTurn = CombatTurn::Enemy;
+		}
+	}
+	else
+	{
+		int dmg = CombatRules::CalculateDamage(
+			enemyDef->baseAttack,
+			playerStats->characterDefinition->baseDefense
+		);
+		playerHP -= dmg;
+		currentTurn = CombatTurn::Player;
+	}
+
+	if (playerHP <= 0 || enemyHP <= 0)
+	{
+		combatFinished = true;
+
+		if (playerHP > 0)
+		{
+			result = CombatResult::PlayerWin;
+			playerStats->currentHP = playerHP;
+		}
+		else
+		{
+			result = CombatResult::PlayerLose;
+			playerStats->currentHP = 0;
+		}
+	}
+}
+
+void CombatSystem::Render(sf::RenderWindow& window)
+{
+	sf::RectangleShape playerShape({ 80.f, 80.f });
+	playerShape.setFillColor(sf::Color::Blue);
+	playerShape.setPosition(100.f, 350.f);
+
+	sf::RectangleShape enemyShape({ 80.f, 80.f });
+	enemyShape.setFillColor(sf::Color::Red);
+	enemyShape.setPosition(500.f, 150.f);
+
+	window.draw(playerShape);
+	window.draw(enemyShape);
+
+	// === HP Bar ===
+	float playerHPPercent = (float)playerHP /
+		playerStats->characterDefinition->baseMaxHP;
+
+	sf::RectangleShape playerHPBarBack({ 200.f, 20.f });
+	playerHPBarBack.setFillColor(sf::Color(100, 100, 100));
+	playerHPBarBack.setPosition(80.f, 320.f);
+
+	sf::RectangleShape playerHPBarFront({ 200.f * playerHPPercent, 20.f });
+	playerHPBarFront.setFillColor(sf::Color::Green);
+	playerHPBarFront.setPosition(80.f, 320.f);
+
+	window.draw(playerHPBarBack);
+	window.draw(playerHPBarFront);
+
+	float enemyHPPercent = (float)enemyHP / enemyDef->baseMaxHP;
+
+	sf::RectangleShape enemyHPBarBack({ 200.f, 20.f });
+	enemyHPBarBack.setFillColor(sf::Color(100, 100, 100));
+	enemyHPBarBack.setPosition(480.f, 120.f);
+
+	sf::RectangleShape enemyHPBarFront({ 200.f * enemyHPPercent, 20.f });
+	enemyHPBarFront.setFillColor(sf::Color::Green);
+	enemyHPBarFront.setPosition(480.f, 120.f);
+
+	window.draw(enemyHPBarBack);
+	window.draw(enemyHPBarFront);
+
+	if (combatPhase == CombatPhase::PlayerChoosing)
+	{
+		sf::RectangleShape menuBox({ 600.f, 120.f });
+		menuBox.setFillColor(sf::Color(50, 50, 50));
+		menuBox.setPosition(100.f, 450.f);
+
+		sf::Text attackText("1. Attack", font, 20);
+		attackText.setPosition(150.f, 480.f);
+
+		sf::Text defendText("2. Defend", font, 20);
+		defendText.setPosition(350.f, 480.f);
+
+		sf::Text runText("3. Run", font, 20);
+		runText.setPosition(550.f, 480.f);
+
+		window.draw(attackText);
+		window.draw(defendText);
+		window.draw(runText);
+		window.draw(menuBox);
+	}
+}
+
+bool CombatSystem::IsFinished() const
+{
+	return combatFinished;
+}
+
+CombatResult CombatSystem::GetResult() const
+{
+	return result;
 }
