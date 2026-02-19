@@ -8,6 +8,14 @@
 #include "CombatAction.h"
 #include <SFML/Graphics.hpp>
 
+enum class CombatPhase
+{
+	PlayerChoosing,
+	PlayerActing,
+	EnemyActing,
+	Finished
+};
+
 class CombatSystem
 {
 public:
@@ -50,12 +58,4 @@ private:
 
 	CombatPhase combatPhase;
 	sf::Font font;
-};
-
-enum class CombatPhase
-{
-	PlayerChoosing,
-	PlayerActing,
-	EnemyActing,
-	Finished
 };
