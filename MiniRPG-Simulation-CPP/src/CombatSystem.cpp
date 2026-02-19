@@ -176,26 +176,29 @@ void CombatSystem::Update(float dt)
 {
 	if (combatFinished) return;
 
-	if (currentTurn == CombatTurn::Player)
+	//if (currentTurn == CombatTurn::Player)
+	if (combatPhase == CombatPhase::PlayerChoosing)
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
 		{
 			int dmg = CombatRules::CalculateDamage(
 				playerStats->characterDefinition->baseAttack,
 				enemyDef->baseDefense
 			);
 			enemyHP -= dmg;
-			currentTurn = CombatTurn::Enemy;
+			//currentTurn = CombatTurn::Enemy;
+			combatPhase = CombatPhase::EnemyActing;
 		}
 	}
-	else
+	else if (combatPhase == CombatPhase::EnemyActing)
 	{
 		int dmg = CombatRules::CalculateDamage(
 			enemyDef->baseAttack,
 			playerStats->characterDefinition->baseDefense
 		);
 		playerHP -= dmg;
-		currentTurn = CombatTurn::Player;
+		//currentTurn = CombatTurn::Player;
+		combatPhase = CombatPhase::PlayerChoosing;
 	}
 
 	if (playerHP <= 0 || enemyHP <= 0)
