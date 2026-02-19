@@ -5,17 +5,33 @@
 class PlayerMovementSystem
 {
 public:
-	static void HandleInputMove(PositionComponent& pos, char input, float step = 1.0f)
+	//static void HandleInputMove(PositionComponent& pos, char input, float step = 1.0f)
+	//{
+	//	switch (input)
+	//	{
+	//		case 'w': pos.y += step; break;
+	//		case 's': pos.y -= step; break;
+	//		case 'a': pos.x -= step; break;
+	//		case 'd': pos.x += step; break;
+	//		//case 'q': return false;
+	//		default: break;// ignore unknown keys
+	//	}
+	//	//return true;
+	//}
+
+	static void HandleRealtimeInput(PositionComponent& pos, float speed, float dt)
 	{
-		switch (input)
-		{
-			case 'w': pos.y += step; break;
-			case 's': pos.y -= step; break;
-			case 'a': pos.x -= step; break;
-			case 'd': pos.x += step; break;
-			//case 'q': return false;
-			default: break;// ignore unknown keys
-		}
-		//return true;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			pos.y -= speed * dt;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			pos.y += speed * dt;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			pos.x -= speed * dt;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			pos.x += speed * dt;
 	}
+
 };
