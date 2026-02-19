@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 #include "Entity.h"
 #include "Components.h"
@@ -17,7 +18,8 @@
 int main()
 {
     std::srand((unsigned)time(nullptr));
-    std::cout << "Mini RPG Simulation Started" << std::endl;
+    //std::cout << "Mini RPG Simulation Started" << std::endl;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Mini RPG");
 
     // ===== PLAYER =====
     Entity player = 1;
@@ -71,87 +73,56 @@ int main()
                 << ")\n";
     }
 
+    // ===== DRAW SHAPE FOR ENEMY AND PLAYER =====
+    sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
+    playerShape.setFillColor(sf::Color::Blue);
+
+    sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
+    enemyShape.setFillColor(sf::Color::Red);
+
     //bool running = true;
     GameState gameState = GameState::Exploration;
+    int currentEnemyIndex = -1;
+    sf::Clock deltaClock;
 
     //while (gameState != GameState::Exit)
-    //{
-    //    std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
-    //    for (int i = 0; i < enemies.size(); i++)
-    //    {
-    //        float dist = Distance(
-    //            playerPos.x,
-    //            playerPos.y,
-    //            enemies[i].position.x,
-    //            enemies[i].position.y
-    //        );
-    //        std::cout << "Distance to Enemy " << i << ": " << dist << "\n";
-    //        if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
-    //        {
-    //            std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
-    //            CombatResult result = CombatSystem::StartCombat(playerStats, enemies[i].enemyDef);
-    //            if (result == CombatResult::PlayerWin)
-    //            {
-    //                std::cout << "Enemy defeated!\n";
-
-    //                enemies.erase(enemies.begin() + i);
-    //                i--;
-    //                // Print enemy pos again
-    //                std::cout << "\nEnemies\n";
-    //                for (int i = 0; i < enemies.size(); i++)
-    //                {
-    //                    std::cout << "Enemy " << i
-    //                        << ": (" << enemies[i].position.x
-    //                        << ", " << enemies[i].position.y
-    //                        << ")\n";
-    //                }
-    //            }
-    //            else
-    //            {
-    //                std::cout << "Player died. Game Over.\n";
-    //                gameState = GameState::Exit;
-    //            }
-    //            break;
-    //        }
-    //    }
-    //    // INPUT
-    //    std::cout << "\nMove (W/A/S/D) or Q to quit: ";
-    //    char input;
-    //    std::cin >> input;
-    //    if (input == 'q')
-    //    {
-    //        gameState = GameState::Exit;
-    //        break;
-    //    }
-    //    PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
-    //    std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
-    //}
-    int currentEnemyIndex = -1;
-
-    while (gameState != GameState::Exit)
+    while (window.isOpen())
     {
+        // Get the time elapsed since the last frame
+        sf::Time dt = deltaClock.restart();
+        float deltaTime = dt.asSeconds();
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+        }
+
         switch (gameState)
         {
             case GameState::Exploration:
             {
-                std::cout << "\n--- Exploration Mode ---";
-                std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
-                // Print enemy pos again
-                std::cout << "\nEnemies\n";
-                for (int i = 0; i < enemies.size(); i++)
-                {
-                    std::cout << "Enemy " << i
-                        << ": (" << enemies[i].position.x
-                        << ", " << enemies[i].position.y
-                        << ")\n";
-                }
+                //std::cout << "\n--- Exploration Mode ---";
+                //std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
+                //// Print enemy pos again
+                //std::cout << "\nEnemies\n";
+                //for (int i = 0; i < enemies.size(); i++)
+                //{
+                //    std::cout << "Enemy " << i
+                //        << ": (" << enemies[i].position.x
+                //        << ", " << enemies[i].position.y
+                //        << ")\n";
+                //}
 
                 // 1. Check for Encounters
                 for (int i = 0; i < enemies.size(); i++)
                 {
                     if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
                     {
-                        std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
+                        //std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
                         currentEnemyIndex = i;
                         gameState = GameState::Combat;
                         break;
@@ -161,18 +132,18 @@ int main()
                 if (gameState == GameState::Combat) break; // Exit exploration logic if combat started
 
                 // 2. Handle Movement
-                std::cout << "Move (W/A/S/D) or Q to quit: ";
-                char input;
-                std::cin >> input;
-                if (input == 'q') { gameState = GameState::Exit; break; }
+                //std::cout << "Move (W/A/S/D) or Q to quit: ";
+                //char input;
+                //std::cin >> input;
+                //if (input == 'q') { gameState = GameState::Exit; break; }
 
-                PlayerMovementSystem::HandleInputMove(playerPos, input, 1.0f);
+                PlayerMovementSystem::HandleRealtimeInput(playerPos, 50.0f, deltaTime);
                 break;
             }
 
             case GameState::Combat:
             {
-                std::cout << "\n--- Combat Mode ---";
+                //std::cout << "\n--- Combat Mode ---";
 
                 CombatResult result = CombatSystem::StartCombat(playerStats, enemies[currentEnemyIndex].enemyDef);
                 if (result == CombatResult::PlayerWin)
@@ -189,6 +160,29 @@ int main()
                 break;
             }
         }
+        // Render
+        window.clear(sf::Color::Green);
+        // Draw
+        float centerX = 400; // half of 800
+        float centerY = 300; // half of 600
+
+        //sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
+        //playerShape.setFillColor(sf::Color::Blue);
+        playerShape.setPosition(centerX + playerPos.x * 20,
+            centerY + playerPos.y * 20);
+        window.draw(playerShape);
+
+        for (const auto& enemy : enemies)
+        {
+            //sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
+            //enemyShape.setFillColor(sf::Color::Red);
+            enemyShape.setPosition(centerX + enemy.position.x * 20,
+                centerY + enemy.position.y * 20);
+            window.draw(enemyShape);
+        }
+
+
+        window.display();
     }
 
     if (gameState == GameState::Exit) return 0;
