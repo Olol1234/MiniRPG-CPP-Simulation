@@ -6,10 +6,12 @@
 #include "CombatResult.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <filesystem>
 
 CombatSystem::CombatSystem()
 {
-	if (!font.loadFromFile("data/arial.ttf"))
+	//if (!font.loadFromFile("OpenSans-Regular.ttf"))
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		std::cout << "Failed to load font!\n";
 	}
@@ -273,17 +275,21 @@ void CombatSystem::Render(sf::RenderWindow& window)
 
 		sf::Text attackText("1. Attack", font, 20);
 		attackText.setPosition(150.f, 480.f);
+		attackText.setFillColor(sf::Color::Blue);
 
 		sf::Text defendText("2. Defend", font, 20);
 		defendText.setPosition(350.f, 480.f);
+		defendText.setFillColor(sf::Color::Blue);
 
 		sf::Text runText("3. Run", font, 20);
 		runText.setPosition(550.f, 480.f);
+		runText.setFillColor(sf::Color::Blue);
 
+		window.draw(menuBox);
 		window.draw(attackText);
 		window.draw(defendText);
 		window.draw(runText);
-		window.draw(menuBox);
+		//window.draw(menuBox);
 	}
 }
 
