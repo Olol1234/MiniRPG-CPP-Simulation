@@ -176,11 +176,16 @@ void CombatSystem::Update(float dt)
 {
 	if (combatFinished) return;
 
+	actionTimer += dt;
+
+	if (actionTimer < actionDelay) return;
+
 	//if (currentTurn == CombatTurn::Player)
 	if (combatPhase == CombatPhase::PlayerChoosing)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
 		{
+			actionTimer = 0.0f;
 			int dmg = CombatRules::CalculateDamage(
 				playerStats->characterDefinition->baseAttack,
 				enemyDef->baseDefense
@@ -192,6 +197,7 @@ void CombatSystem::Update(float dt)
 	}
 	else if (combatPhase == CombatPhase::EnemyActing)
 	{
+		actionTimer = 0.0f;
 		int dmg = CombatRules::CalculateDamage(
 			enemyDef->baseAttack,
 			playerStats->characterDefinition->baseDefense

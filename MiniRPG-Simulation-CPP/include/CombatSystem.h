@@ -58,4 +58,6 @@ private:
 
 	CombatPhase combatPhase;
 	sf::Font font;
+	float actionTimer = 0.0f;
+	float actionDelay = 0.6f;
 };
