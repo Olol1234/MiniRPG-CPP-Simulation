@@ -52,11 +52,15 @@ int main()
     enemies.reserve(5);
     for (size_t i = 0; i < 5; i++)
     {
-        PositionComponent enemyPos
+        PositionComponent enemyPos;
+        float minSpawnDistance = 5.0f;
+        do
         {
-            (float)(rand() % 20 - 10),
-            (float)(rand() % 20 - 10)
-        };
+            enemyPos.x = (float)(rand() % 20 - 10);
+            enemyPos.y = (float)(rand() % 20 - 10);
+
+        } while (Distance( playerPos.x, playerPos.y,
+            enemyPos.x, enemyPos.y) < minSpawnDistance);
         WorldEnemy enemy;
         enemy.position = enemyPos;
         enemy.enemyDef = enemyGoblinDef;
@@ -64,14 +68,14 @@ int main()
     }
 
     // ===== PRINT ENEMIES POS TO CHECK =====
-    std::cout << "\nEnemies\n";
-    for (int i = 0; i < enemies.size(); i++)
-    {
-        std::cout << "Enemy " << i
-                << ": (" << enemies[i].position.x
-                << ", " << enemies[i].position.y
-                << ")\n";
-    }
+    //std::cout << "\nEnemies\n";
+    //for (int i = 0; i < enemies.size(); i++)
+    //{
+    //    std::cout << "Enemy " << i
+    //            << ": (" << enemies[i].position.x
+    //            << ", " << enemies[i].position.y
+    //            << ")\n";
+    //}
 
     // ===== DRAW SHAPE FOR ENEMY AND PLAYER =====
     sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
@@ -84,6 +88,7 @@ int main()
     GameState gameState = GameState::Exploration;
     int currentEnemyIndex = -1;
     sf::Clock deltaClock;
+    CombatSystem combatSystem;
 
     //while (gameState != GameState::Exit)
     while (window.isOpen())
@@ -105,37 +110,20 @@ int main()
         {
             case GameState::Exploration:
             {
-                //std::cout << "\n--- Exploration Mode ---";
-                //std::cout << "\nPlayer Position: (" << playerPos.x << ", " << playerPos.y << ")\n";
-                //// Print enemy pos again
-                //std::cout << "\nEnemies\n";
-                //for (int i = 0; i < enemies.size(); i++)
-                //{
-                //    std::cout << "Enemy " << i
-                //        << ": (" << enemies[i].position.x
-                //        << ", " << enemies[i].position.y
-                //        << ")\n";
-                //}
-
                 // 1. Check for Encounters
                 for (int i = 0; i < enemies.size(); i++)
                 {
                     if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
                     {
-                        //std::cout << "\n ENCOUNTER WITH ENEMY " << i << "!\n";
                         currentEnemyIndex = i;
+                        combatSystem.BeginCombat(playerStats, 
+                            enemies[currentEnemyIndex].enemyDef);
                         gameState = GameState::Combat;
                         break;
                     }
                 }
 
-                if (gameState == GameState::Combat) break; // Exit exploration logic if combat started
-
-                // 2. Handle Movement
-                //std::cout << "Move (W/A/S/D) or Q to quit: ";
-                //char input;
-                //std::cin >> input;
-                //if (input == 'q') { gameState = GameState::Exit; break; }
+                if (gameState == GameState::Combat) break;
 
                 PlayerMovementSystem::HandleRealtimeInput(playerPos, 50.0f, deltaTime);
                 break;
@@ -143,48 +131,60 @@ int main()
 
             case GameState::Combat:
             {
-                //std::cout << "\n--- Combat Mode ---";
+                combatSystem.Update(deltaTime);
 
-                CombatResult result = CombatSystem::StartCombat(playerStats, enemies[currentEnemyIndex].enemyDef);
-                if (result == CombatResult::PlayerWin)
+                if (combatSystem.IsFinished())
                 {
-                    std::cout << "Enemy defeated!\n";
-                    enemies.erase(enemies.begin() + currentEnemyIndex);
-                    gameState = GameState::Exploration;
+                    CombatResult result = combatSystem.GetResult();
+
+                    if (result == CombatResult::PlayerWin)
+                    {
+                        enemies.erase(enemies.begin() + currentEnemyIndex);
+                        gameState = GameState::Exploration;
+                    }
+                    else
+                    {
+                        gameState = GameState::Exit;
+                    }
                 }
-                else
-                {
-                    std::cout << "Player died. Game Over.\n";
-                    gameState = GameState::Exit;
-                }
-                break;
             }
         }
         // Render
-        window.clear(sf::Color::Green);
-        // Draw
-        float centerX = 400; // half of 800
-        float centerY = 300; // half of 600
+        //window.clear(sf::Color::Green);
+        window.clear(
+            gameState == GameState::Exploration
+            ? sf::Color::Green
+            : sf::Color::Cyan
+        );
 
-        float playerIsoX = (playerPos.x - playerPos.y) * 32.0f;
-        float playerIsoY = (playerPos.x + playerPos.y) * 16.0f;
-
-        //playerShape.setPosition(centerX + playerIsoX, centerY + playerIsoY);
-        playerShape.setPosition(centerX + playerPos.x * 20,
-            centerY + playerPos.y * 20);
-        window.draw(playerShape);
-
-        for (const auto& enemy : enemies)
+        if (gameState == GameState::Exploration)
         {
-            float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
-            float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
-            enemyShape.setPosition(centerX + enemy.position.x * 20,
-                centerY + enemy.position.y * 20);
-            //enemyShape.setPosition(centerX + isoX, centerY + isoY);
-            window.draw(enemyShape);
+            // Draw
+            float centerX = 400; // half of 800
+            float centerY = 300; // half of 600
+
+            float playerIsoX = (playerPos.x - playerPos.y) * 32.0f;
+            float playerIsoY = (playerPos.x + playerPos.y) * 16.0f;
+
+            //playerShape.setPosition(centerX + playerIsoX, centerY + playerIsoY);
+            playerShape.setPosition(centerX + playerPos.x * 20,
+                centerY + playerPos.y * 20);
+            window.draw(playerShape);
+
+            for (const auto& enemy : enemies)
+            {
+                float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
+                float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
+                enemyShape.setPosition(centerX + enemy.position.x * 20,
+                    centerY + enemy.position.y * 20);
+                //enemyShape.setPosition(centerX + isoX, centerY + isoY);
+                window.draw(enemyShape);
+            }
         }
-
-
+        else if (gameState == GameState::Combat)
+        {
+            combatSystem.Render(window);
+        }
         window.display();
     }
 
