@@ -166,18 +166,21 @@ int main()
         float centerX = 400; // half of 800
         float centerY = 300; // half of 600
 
-        //sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
-        //playerShape.setFillColor(sf::Color::Blue);
+        float playerIsoX = (playerPos.x - playerPos.y) * 32.0f;
+        float playerIsoY = (playerPos.x + playerPos.y) * 16.0f;
+
+        //playerShape.setPosition(centerX + playerIsoX, centerY + playerIsoY);
         playerShape.setPosition(centerX + playerPos.x * 20,
             centerY + playerPos.y * 20);
         window.draw(playerShape);
 
         for (const auto& enemy : enemies)
         {
-            //sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
-            //enemyShape.setFillColor(sf::Color::Red);
+            float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
+            float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
             enemyShape.setPosition(centerX + enemy.position.x * 20,
                 centerY + enemy.position.y * 20);
+            //enemyShape.setPosition(centerX + isoX, centerY + isoY);
             window.draw(enemyShape);
         }
 
