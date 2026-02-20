@@ -139,6 +139,7 @@
     <ClCompile Include="src\CombatSystem.cpp" />
     <ClCompile Include="src\DefinitionManager.cpp" />
     <ClCompile Include="src\EncounterSystem.cpp" />
+    <ClCompile Include="src\PlayerMovementSystem.cpp" />
     <ClCompile Include="src\Test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

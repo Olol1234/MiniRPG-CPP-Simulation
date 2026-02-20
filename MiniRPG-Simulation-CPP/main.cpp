@@ -96,7 +96,8 @@ int main()
     CombatSystem combatSystem;
 
     // View
-    sf::View explorationView(sf::FloatRect(0, 0, 400, 300));
+    //sf::View explorationView(sf::FloatRect(0, 0, 400, 300));
+    sf::View explorationView(sf::FloatRect(0, 0, 800, 600));
     sf::View combatView(sf::FloatRect(0, 0, 800, 600));
     //window.setView(view);
 
@@ -119,8 +120,9 @@ int main()
         {
             case GameState::Exploration:
             {
-                explorationView.setCenter(playerPos.x * 20,
-                    playerPos.y * 20);
+                //explorationView.setCenter(playerPos.x * 20,
+                //    playerPos.y * 20);
+                explorationView.setCenter(0, 0);
                 window.setView(explorationView);
 
                 // 1. Check for Encounters
