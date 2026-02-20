@@ -18,7 +18,6 @@
 int main()
 {
     std::srand((unsigned)time(nullptr));
-    //std::cout << "Mini RPG Simulation Started" << std::endl;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Mini RPG");
 
     // ===== PLAYER =====
@@ -67,16 +66,6 @@ int main()
         enemies.push_back(enemy);
     }
 
-    // ===== PRINT ENEMIES POS TO CHECK =====
-    //std::cout << "\nEnemies\n";
-    //for (int i = 0; i < enemies.size(); i++)
-    //{
-    //    std::cout << "Enemy " << i
-    //            << ": (" << enemies[i].position.x
-    //            << ", " << enemies[i].position.y
-    //            << ")\n";
-    //}
-
     // ===== DRAW SHAPE FOR ENEMY AND PLAYER =====
     sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
     playerShape.setFillColor(sf::Color::Blue);
@@ -90,7 +79,6 @@ int main()
     sf::Clock deltaClock;
     CombatSystem combatSystem;
 
-    //while (gameState != GameState::Exit)
     while (window.isOpen())
     {
         // Get the time elapsed since the last frame
@@ -132,6 +120,19 @@ int main()
             case GameState::Combat:
             {
                 combatSystem.Update(deltaTime);
+
+                if (event.type == sf::Event::MouseButtonPressed)
+                {
+                    if (event.mouseButton.button == sf::Mouse::Left)
+                    {
+                        sf::Vector2f mousePos =
+                            window.mapPixelToCoords(
+                                { event.mouseButton.x, event.mouseButton.y }
+                            );
+
+                        combatSystem.HandleMouseClick(mousePos);
+                    }
+                }
 
                 if (combatSystem.IsFinished())
                 {
