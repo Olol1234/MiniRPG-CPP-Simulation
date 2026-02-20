@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <SFML/Graphics.hpp>
 
 struct CharacterDefinition
 {
@@ -8,4 +9,7 @@ struct CharacterDefinition
 	int baseMaxHP;
 	int baseAttack;
 	int baseDefense;
+
+	std::string spritePath;
+	sf::Texture texture;
 };

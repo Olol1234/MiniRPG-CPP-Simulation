@@ -24,6 +24,12 @@ bool DefinitionManager::LoadCharacterDef(
     def.baseMaxHP = j["baseMaxHP"];
     def.baseAttack = j["baseAttack"];
     def.baseDefense = j["baseDefense"];
+    def.spritePath = j["sprite"];
+
+    if (!def.texture.loadFromFile(def.spritePath))
+    {
+        std::cout << "Failed to load sprite: " << def.spritePath << "\n";
+    }
 
     characterDefinition[id] = def;
 
