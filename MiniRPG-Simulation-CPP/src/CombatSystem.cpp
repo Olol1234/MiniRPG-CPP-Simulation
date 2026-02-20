@@ -254,16 +254,22 @@ void CombatSystem::ExecutePlayerAttack()
 
 void CombatSystem::Render(sf::RenderWindow& window)
 {
-	sf::RectangleShape playerShape({ 80.f, 80.f });
-	playerShape.setFillColor(sf::Color::Blue);
-	playerShape.setPosition(100.f, 350.f);
+	//sf::RectangleShape playerShape({ 80.f, 80.f });
+	//playerShape.setFillColor(sf::Color::Blue);
+	sf::Sprite playerSprite;
+	playerSprite.setTexture(playerStats->characterDefinition->texture);
+	playerSprite.setPosition(50.f, 200.f);
+	playerSprite.setScale(0.5f, 0.5f);
 
-	sf::RectangleShape enemyShape({ 80.f, 80.f });
-	enemyShape.setFillColor(sf::Color::Red);
-	enemyShape.setPosition(500.f, 150.f);
+	//sf::RectangleShape enemyShape({ 80.f, 80.f });
+	//enemyShape.setFillColor(sf::Color::Red);
+	sf::Sprite enemySprite;
+	enemySprite.setTexture(currentEnemy->enemyDef->texture);
+	enemySprite.setPosition(520.f, 80.f);
+	enemySprite.setScale(0.5f, 0.5f);
 
-	window.draw(playerShape);
-	window.draw(enemyShape);
+	window.draw(playerSprite);
+	window.draw(enemySprite);
 
 	// === HP Bar ===
 	float playerHPPercent = (float)playerHP /
@@ -271,11 +277,11 @@ void CombatSystem::Render(sf::RenderWindow& window)
 
 	sf::RectangleShape playerHPBarBack({ 200.f, 20.f });
 	playerHPBarBack.setFillColor(sf::Color(100, 100, 100));
-	playerHPBarBack.setPosition(80.f, 320.f);
+	playerHPBarBack.setPosition(70.f, 200.f);
 
 	sf::RectangleShape playerHPBarFront({ 200.f * playerHPPercent, 20.f });
 	playerHPBarFront.setFillColor(sf::Color::Green);
-	playerHPBarFront.setPosition(80.f, 320.f);
+	playerHPBarFront.setPosition(70.f, 200.f);
 
 	window.draw(playerHPBarBack);
 	window.draw(playerHPBarFront);
@@ -284,11 +290,11 @@ void CombatSystem::Render(sf::RenderWindow& window)
 
 	sf::RectangleShape enemyHPBarBack({ 200.f, 20.f });
 	enemyHPBarBack.setFillColor(sf::Color(100, 100, 100));
-	enemyHPBarBack.setPosition(480.f, 120.f);
+	enemyHPBarBack.setPosition(540.f, 80.f);
 
 	sf::RectangleShape enemyHPBarFront({ 200.f * enemyHPPercent, 20.f });
 	enemyHPBarFront.setFillColor(sf::Color::Green);
-	enemyHPBarFront.setPosition(480.f, 120.f);
+	enemyHPBarFront.setPosition(540.f, 80.f);
 
 	window.draw(enemyHPBarBack);
 	window.draw(enemyHPBarFront);

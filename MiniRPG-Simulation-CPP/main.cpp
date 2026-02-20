@@ -67,17 +67,38 @@ int main()
     }
 
     // ===== DRAW SHAPE FOR ENEMY AND PLAYER =====
-    sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
-    playerShape.setFillColor(sf::Color::Blue);
+    //sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
+    //playerShape.setFillColor(sf::Color::Blue);
 
-    sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
-    enemyShape.setFillColor(sf::Color::Red);
+    //sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
+    //enemyShape.setFillColor(sf::Color::Red);
+
+    sf::Sprite playerSprite;
+    sf::Sprite enemySprite;
+
+    playerSprite.setTexture(playerDefinition->texture);
+    playerSprite.setScale(0.07f, 0.07f);
+    enemySprite.setTexture(enemyGoblinDef->texture);
+    enemySprite.setScale(0.07f, 0.07f);
+    playerSprite.setOrigin(
+        playerSprite.getLocalBounds().width / 2.f,
+        playerSprite.getLocalBounds().height / 2.f
+    );
+    enemySprite.setOrigin(
+        enemySprite.getLocalBounds().width / 2.f,
+        enemySprite.getLocalBounds().height / 2.f
+    );
 
     //bool running = true;
     GameState gameState = GameState::Exploration;
     int currentEnemyIndex = -1;
     sf::Clock deltaClock;
     CombatSystem combatSystem;
+
+    // View
+    sf::View explorationView(sf::FloatRect(0, 0, 400, 300));
+    sf::View combatView(sf::FloatRect(0, 0, 800, 600));
+    //window.setView(view);
 
     while (window.isOpen())
     {
@@ -98,6 +119,10 @@ int main()
         {
             case GameState::Exploration:
             {
+                explorationView.setCenter(playerPos.x * 20,
+                    playerPos.y * 20);
+                window.setView(explorationView);
+
                 // 1. Check for Encounters
                 for (int i = 0; i < enemies.size(); i++)
                 {
@@ -119,6 +144,7 @@ int main()
             case GameState::Combat:
             {
                 combatSystem.Update(deltaTime);
+                window.setView(combatView);
 
                 if (event.type == sf::Event::MouseButtonPressed)
                 {
@@ -167,18 +193,20 @@ int main()
             float playerIsoY = (playerPos.x + playerPos.y) * 16.0f;
 
             //playerShape.setPosition(centerX + playerIsoX, centerY + playerIsoY);
-            playerShape.setPosition(centerX + playerPos.x * 20,
-                centerY + playerPos.y * 20);
-            window.draw(playerShape);
+            //playerSprite.setPosition(centerX + playerPos.x * 20,
+            //    centerY + playerPos.y * 20);
+            playerSprite.setPosition(playerPos.x * 20, playerPos.y * 20);
+            window.draw(playerSprite);
 
             for (const auto& enemy : enemies)
             {
                 float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
                 float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
-                enemyShape.setPosition(centerX + enemy.position.x * 20,
-                    centerY + enemy.position.y * 20);
+                //enemySprite.setPosition(centerX + enemy.position.x * 20,
+                //    centerY + enemy.position.y * 20);
                 //enemyShape.setPosition(centerX + isoX, centerY + isoY);
-                window.draw(enemyShape);
+                enemySprite.setPosition(enemy.position.x * 20, enemy.position.y * 20);
+                window.draw(enemySprite);
             }
         }
         else if (gameState == GameState::Combat)
