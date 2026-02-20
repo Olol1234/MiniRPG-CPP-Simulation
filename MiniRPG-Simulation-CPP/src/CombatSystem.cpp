@@ -10,11 +10,17 @@
 
 CombatSystem::CombatSystem()
 {
-	//if (!font.loadFromFile("OpenSans-Regular.ttf"))
-	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
-	{
-		std::cout << "Failed to load font!\n";
-	}
+	font.loadFromFile("C:/Windows/Fonts/arial.ttf");
+
+	attackButton.setSize({ 200.f, 50.f });
+	attackButton.setFillColor(sf::Color(80, 80, 80));
+	attackButton.setPosition(150.f, 480.f);
+
+	attackText.setFont(font);
+	attackText.setString("Attack");
+	attackText.setCharacterSize(20);
+	attackText.setFillColor(sf::Color::White);
+	attackText.setPosition(200.f, 490.f);
 }
 
 CombatResult CombatSystem::StartCombat(
@@ -187,14 +193,7 @@ void CombatSystem::Update(float dt)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
 		{
-			actionTimer = 0.0f;
-			int dmg = CombatRules::CalculateDamage(
-				playerStats->characterDefinition->baseAttack,
-				enemyDef->baseDefense
-			);
-			enemyHP -= dmg;
-			//currentTurn = CombatTurn::Enemy;
-			combatPhase = CombatPhase::EnemyActing;
+			ExecutePlayerAttack();
 		}
 	}
 	else if (combatPhase == CombatPhase::EnemyActing)
@@ -224,6 +223,22 @@ void CombatSystem::Update(float dt)
 			playerStats->currentHP = 0;
 		}
 	}
+}
+
+void CombatSystem::ExecutePlayerAttack()
+{
+	if (combatPhase != CombatPhase::PlayerChoosing)
+		return;
+
+	actionTimer = 0.0f;
+
+	int dmg = CombatRules::CalculateDamage(
+		playerStats->characterDefinition->baseAttack,
+		enemyDef->baseDefense
+	);
+
+	enemyHP -= dmg;
+	combatPhase = CombatPhase::EnemyActing;
 }
 
 void CombatSystem::Render(sf::RenderWindow& window)
@@ -273,9 +288,9 @@ void CombatSystem::Render(sf::RenderWindow& window)
 		menuBox.setFillColor(sf::Color(50, 50, 50));
 		menuBox.setPosition(100.f, 450.f);
 
-		sf::Text attackText("1. Attack", font, 20);
-		attackText.setPosition(150.f, 480.f);
-		attackText.setFillColor(sf::Color::Blue);
+		//sf::Text attackText("1. Attack", font, 20);
+		//attackText.setPosition(150.f, 480.f);
+		//attackText.setFillColor(sf::Color::Blue);
 
 		sf::Text defendText("2. Defend", font, 20);
 		defendText.setPosition(350.f, 480.f);
@@ -286,10 +301,22 @@ void CombatSystem::Render(sf::RenderWindow& window)
 		runText.setFillColor(sf::Color::Blue);
 
 		window.draw(menuBox);
+		window.draw(attackButton);
 		window.draw(attackText);
 		window.draw(defendText);
 		window.draw(runText);
 		//window.draw(menuBox);
+	}
+}
+
+void CombatSystem::HandleMouseClick(sf::Vector2f mousePos)
+{
+	if (combatPhase != CombatPhase::PlayerChoosing)
+		return;
+
+	if (attackButton.getGlobalBounds().contains(mousePos))
+	{
+		ExecutePlayerAttack();
 	}
 }
 

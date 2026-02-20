@@ -32,6 +32,7 @@ public:
 	void Render(sf::RenderWindow& window);
 	bool IsFinished() const;
 	CombatResult GetResult() const;
+	void HandleMouseClick(sf::Vector2f mousePos);
 
 private:
 	static void StartTurn(CombatTurn turn);
@@ -47,6 +48,7 @@ private:
 		int attackerDefense,
 		bool isPlayerAttacker
 	);
+	void ExecutePlayerAttack();
 
 	CombatStatsComponent* playerStats;
 	const CharacterDefinition* enemyDef;
@@ -60,4 +62,6 @@ private:
 	sf::Font font;
 	float actionTimer = 0.0f;
 	float actionDelay = 0.6f;
+	sf::RectangleShape attackButton;
+	sf::Text attackText;
 };
