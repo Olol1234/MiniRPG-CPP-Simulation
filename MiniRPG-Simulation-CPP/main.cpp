@@ -104,8 +104,7 @@ int main()
                     if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
                     {
                         currentEnemyIndex = i;
-                        combatSystem.BeginCombat(playerStats, 
-                            enemies[currentEnemyIndex].enemyDef);
+                        combatSystem.BeginCombat(playerStats, enemies[currentEnemyIndex]);
                         gameState = GameState::Combat;
                         break;
                     }
