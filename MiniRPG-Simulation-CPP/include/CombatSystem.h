@@ -26,7 +26,7 @@ public:
 	);
 	void BeginCombat(
 		CombatStatsComponent& playerStats,
-		const CharacterDefinition* enemyDef
+		WorldEnemy& enemy
 	);
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
@@ -51,7 +51,7 @@ private:
 	void ExecutePlayerAttack();
 
 	CombatStatsComponent* playerStats;
-	const CharacterDefinition* enemyDef;
+	WorldEnemy* currentEnemy;
 	int playerHP;
 	int enemyHP;
 	CombatTurn currentTurn;

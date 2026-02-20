@@ -23,158 +23,157 @@ CombatSystem::CombatSystem()
 	attackText.setPosition(200.f, 490.f);
 }
 
-CombatResult CombatSystem::StartCombat(
-	CombatStatsComponent& playerStats,
-	const CharacterDefinition* enemyDef
-)
-{
-	CombatStatsComponent enemyStats;
-	enemyStats.characterDefinition = enemyDef;
-	enemyStats.currentHP = enemyDef->baseMaxHP;
+//CombatResult CombatSystem::StartCombat(
+//	CombatStatsComponent& playerStats,
+//	const CharacterDefinition* enemyDef
+//)
+//{
+//	CombatStatsComponent enemyStats;
+//	enemyStats.characterDefinition = enemyDef;
+//	enemyStats.currentHP = enemyDef->baseMaxHP;
+//
+//	int& playerHP = playerStats.currentHP;
+//	int enemyHP = enemyStats.currentHP;
+//
+//	int playerAttack = playerStats.characterDefinition->baseAttack;
+//	int enemyAttack = enemyDef->baseAttack;
+//
+//	int playerDefense = playerStats.characterDefinition->baseDefense;
+//	int enemyDefense = enemyDef->baseDefense;
+//
+//	CombatTurn currentTurn = CombatTurn::Player;
+//
+//	std::cout << "\n=== COMBAT START ===\n";
+//
+//	while (playerHP > 0 && enemyHP > 0)
+//	{
+//		StartTurn(currentTurn);
+//
+//		CombatAction action;
+//
+//		if (currentTurn == CombatTurn::Player)
+//		{
+//			action = ChoosePlayerAction();
+//			ExecuteAction(
+//				action,
+//				playerHP,
+//				enemyHP,
+//				playerAttack,
+//				enemyDefense,
+//				true
+//			);
+//			std::cout << "Enemy HP left " << enemyHP << "\n";
+//		}
+//		else
+//		{
+//			action = ChooseEnemyAction();
+//
+//			ExecuteAction(
+//				action,
+//				enemyHP,
+//				playerHP,
+//				enemyAttack,
+//				playerDefense,
+//				false
+//			);
+//			std::cout << "Player HP left " << playerHP << "\n";
+//		}
+//		EndTurn(currentTurn);
+//
+//		// Switch Turn
+//		if (currentTurn == CombatTurn::Player)
+//			currentTurn = CombatTurn::Enemy;
+//		else
+//			currentTurn = CombatTurn::Player;
+//	}
+//
+//	if (playerHP > 0)
+//	{
+//		std::cout << "Player wins!\n";
+//		return CombatResult::PlayerWin;
+//	}
+//	else
+//	{
+//		std::cout << "Player loses!\n";
+//		return CombatResult::PlayerLose;
+//	}
+//
+//	std::cout << "=== COMBAT END ===\n";
+//}
 
-	int& playerHP = playerStats.currentHP;
-	int enemyHP = enemyStats.currentHP;
+//void CombatSystem::StartTurn(CombatTurn turn)
+//{
+//	if (turn == CombatTurn::Player)
+//		std::cout << "Player prepares action...\n";
+//	else
+//		std::cout << "Enemy prepares action...\n";
+//}
+//
+//void CombatSystem::EndTurn(CombatTurn turn)
+//{
+//	if (turn == CombatTurn::Player)
+//		std::cout << "Player turn ends.\n";
+//	else
+//		std::cout << "Enemy turn ends.\n";
+//}
 
-	int playerAttack = playerStats.characterDefinition->baseAttack;
-	int enemyAttack = enemyDef->baseAttack;
+//CombatAction CombatSystem::ChoosePlayerAction()
+//{
+//	std::cout << "\nChoose Action:\n";
+//	std::cout << "1. Attack\n";
+//	std::cout << "2. Defend (not implemented)\n";
+//	std::cout << "3. Run (not implemented)\n";
+//
+//	int input;
+//	std::cin >> input;
+//
+//	if (input == 1) return CombatAction::Attack;
+//
+//	return CombatAction::Attack; // fallback
+//}
 
-	int playerDefense = playerStats.characterDefinition->baseDefense;
-	int enemyDefense = enemyDef->baseDefense;
+//CombatAction CombatSystem::ChooseEnemyAction()
+//{
+//	return CombatAction::Attack;
+//}
 
-	CombatTurn currentTurn = CombatTurn::Player;
-
-	std::cout << "\n=== COMBAT START ===\n";
-
-	while (playerHP > 0 && enemyHP > 0)
-	{
-		StartTurn(currentTurn);
-
-		CombatAction action;
-
-		if (currentTurn == CombatTurn::Player)
-		{
-			action = ChoosePlayerAction();
-			ExecuteAction(
-				action,
-				playerHP,
-				enemyHP,
-				playerAttack,
-				enemyDefense,
-				true
-			);
-			std::cout << "Enemy HP left " << enemyHP << "\n";
-		}
-		else
-		{
-			action = ChooseEnemyAction();
-
-			ExecuteAction(
-				action,
-				enemyHP,
-				playerHP,
-				enemyAttack,
-				playerDefense,
-				false
-			);
-			std::cout << "Player HP left " << playerHP << "\n";
-		}
-		EndTurn(currentTurn);
-
-		// Switch Turn
-		if (currentTurn == CombatTurn::Player)
-			currentTurn = CombatTurn::Enemy;
-		else
-			currentTurn = CombatTurn::Player;
-	}
-
-	if (playerHP > 0)
-	{
-		std::cout << "Player wins!\n";
-		return CombatResult::PlayerWin;
-	}
-	else
-	{
-		std::cout << "Player loses!\n";
-		return CombatResult::PlayerLose;
-	}
-
-	std::cout << "=== COMBAT END ===\n";
-
-}
-
-void CombatSystem::StartTurn(CombatTurn turn)
-{
-	if (turn == CombatTurn::Player)
-		std::cout << "Player prepares action...\n";
-	else
-		std::cout << "Enemy prepares action...\n";
-}
-
-void CombatSystem::EndTurn(CombatTurn turn)
-{
-	if (turn == CombatTurn::Player)
-		std::cout << "Player turn ends.\n";
-	else
-		std::cout << "Enemy turn ends.\n";
-}
-
-CombatAction CombatSystem::ChoosePlayerAction()
-{
-	std::cout << "\nChoose Action:\n";
-	std::cout << "1. Attack\n";
-	std::cout << "2. Defend (not implemented)\n";
-	std::cout << "3. Run (not implemented)\n";
-
-	int input;
-	std::cin >> input;
-
-	if (input == 1) return CombatAction::Attack;
-
-	return CombatAction::Attack; // fallback
-}
-
-CombatAction CombatSystem::ChooseEnemyAction()
-{
-	return CombatAction::Attack;
-}
-
-void CombatSystem::ExecuteAction(
-	CombatAction action,
-	int& attackerHP,
-	int& defenderHP,
-	int attackerAttack,
-	int defenderDefense,
-	bool isPlayerAttacker
-)
-{
-	if (action == CombatAction::Attack)
-	{
-		int dmg = CombatRules::CalculateDamage(attackerAttack, defenderDefense);
-		defenderHP -= dmg;
-
-		if (isPlayerAttacker)
-		{
-			std::cout << "Player attacks for " << dmg << "\n";
-		}
-		else
-		{
-			std::cout << "Enemy attacks for " << dmg << "\n";
-		}
-	}
-}
+//void CombatSystem::ExecuteAction(
+//	CombatAction action,
+//	int& attackerHP,
+//	int& defenderHP,
+//	int attackerAttack,
+//	int defenderDefense,
+//	bool isPlayerAttacker
+//)
+//{
+//	if (action == CombatAction::Attack)
+//	{
+//		int dmg = CombatRules::CalculateDamage(attackerAttack, defenderDefense);
+//		defenderHP -= dmg;
+//
+//		if (isPlayerAttacker)
+//		{
+//			std::cout << "Player attacks for " << dmg << "\n";
+//		}
+//		else
+//		{
+//			std::cout << "Enemy attacks for " << dmg << "\n";
+//		}
+//	}
+//}
 
 void CombatSystem::BeginCombat(
 	CombatStatsComponent& player,
-	const CharacterDefinition* enemyDefinition
+	WorldEnemy& enemyWorld
 )
 {
 	combatPhase = CombatPhase::PlayerChoosing;
 
 	playerStats = &player;
-	enemyDef = enemyDefinition;
+	currentEnemy = &enemyWorld;
 
 	playerHP = player.currentHP;
-	enemyHP = enemyDefinition->baseMaxHP;
+	enemyHP = currentEnemy->enemyDef->baseMaxHP;
 
 	currentTurn = CombatTurn::Player;
 	combatFinished = false;
@@ -200,7 +199,7 @@ void CombatSystem::Update(float dt)
 	{
 		actionTimer = 0.0f;
 		int dmg = CombatRules::CalculateDamage(
-			enemyDef->baseAttack,
+			currentEnemy->enemyDef->baseAttack,
 			playerStats->characterDefinition->baseDefense
 		);
 		playerHP -= dmg;
@@ -225,6 +224,17 @@ void CombatSystem::Update(float dt)
 	}
 }
 
+void CombatSystem::HandleMouseClick(sf::Vector2f mousePos)
+{
+	//if (combatPhase != CombatPhase::PlayerChoosing)
+	//	return;
+
+	if (attackButton.getGlobalBounds().contains(mousePos))
+	{
+		ExecutePlayerAttack();
+	}
+}
+
 void CombatSystem::ExecutePlayerAttack()
 {
 	if (combatPhase != CombatPhase::PlayerChoosing)
@@ -234,7 +244,7 @@ void CombatSystem::ExecutePlayerAttack()
 
 	int dmg = CombatRules::CalculateDamage(
 		playerStats->characterDefinition->baseAttack,
-		enemyDef->baseDefense
+		currentEnemy->enemyDef->baseDefense
 	);
 
 	enemyHP -= dmg;
@@ -269,7 +279,7 @@ void CombatSystem::Render(sf::RenderWindow& window)
 	window.draw(playerHPBarBack);
 	window.draw(playerHPBarFront);
 
-	float enemyHPPercent = (float)enemyHP / enemyDef->baseMaxHP;
+	float enemyHPPercent = (float)enemyHP / currentEnemy->enemyDef->baseMaxHP;
 
 	sf::RectangleShape enemyHPBarBack({ 200.f, 20.f });
 	enemyHPBarBack.setFillColor(sf::Color(100, 100, 100));
@@ -306,17 +316,6 @@ void CombatSystem::Render(sf::RenderWindow& window)
 		window.draw(defendText);
 		window.draw(runText);
 		//window.draw(menuBox);
-	}
-}
-
-void CombatSystem::HandleMouseClick(sf::Vector2f mousePos)
-{
-	if (combatPhase != CombatPhase::PlayerChoosing)
-		return;
-
-	if (attackButton.getGlobalBounds().contains(mousePos))
-	{
-		ExecutePlayerAttack();
 	}
 }
 
