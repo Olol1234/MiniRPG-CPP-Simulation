@@ -2,5 +2,6 @@
   "name": "Goblin",
   "baseMaxHP": 50,
   "baseAttack": 8,
-  "baseDefense": 5
+  "baseDefense": 5,
+  "sprite":  "data/Enemy1.png"
 }
