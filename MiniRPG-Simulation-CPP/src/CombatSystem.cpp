@@ -203,7 +203,7 @@ void CombatSystem::Update(float dt)
 			playerStats->characterDefinition->baseDefense
 		);
 		playerHP -= dmg;
-		//currentTurn = CombatTurn::Player;
+		if (playerHP < 0) playerHP = 0;
 		combatPhase = CombatPhase::PlayerChoosing;
 	}
 
@@ -248,6 +248,7 @@ void CombatSystem::ExecutePlayerAttack()
 	);
 
 	enemyHP -= dmg;
+	if (enemyHP < 0) enemyHP = 0;
 	combatPhase = CombatPhase::EnemyActing;
 }
 
