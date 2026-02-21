@@ -20,10 +20,10 @@ class CombatSystem
 {
 public:
 	CombatSystem();
-	static CombatResult StartCombat(
-		CombatStatsComponent& player,
-		const CharacterDefinition* enemyDefinition
-	);
+	//static CombatResult StartCombat(
+	//	CombatStatsComponent& player,
+	//	const CharacterDefinition* enemyDefinition
+	//);
 	void BeginCombat(
 		CombatStatsComponent& playerStats,
 		WorldEnemy& enemy
@@ -35,19 +35,19 @@ public:
 	void HandleMouseClick(sf::Vector2f mousePos);
 
 private:
-	static void StartTurn(CombatTurn turn);
-	static void EndTurn(CombatTurn turn);
+	//static void StartTurn(CombatTurn turn);
+	//static void EndTurn(CombatTurn turn);
 
-	static CombatAction ChoosePlayerAction();
-	static CombatAction ChooseEnemyAction();
-	static void ExecuteAction(
-		CombatAction action,
-		int& attackerHp,
-		int& defenderHp,
-		int attackerAttack,
-		int attackerDefense,
-		bool isPlayerAttacker
-	);
+	//static CombatAction ChoosePlayerAction();
+	//static CombatAction ChooseEnemyAction();
+	//static void ExecuteAction(
+	//	CombatAction action,
+	//	int& attackerHp,
+	//	int& defenderHp,
+	//	int attackerAttack,
+	//	int attackerDefense,
+	//	bool isPlayerAttacker
+	//);
 	void ExecutePlayerAttack();
 
 	CombatStatsComponent* playerStats;
