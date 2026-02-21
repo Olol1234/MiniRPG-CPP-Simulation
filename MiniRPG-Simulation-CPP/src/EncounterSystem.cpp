@@ -16,3 +16,19 @@ bool EncounterSystem::CheckEncounter(
 
     return distance <= triggerDistance;
 }
+
+bool EncounterSystem::CheckExitDoorEncounter(
+    const PositionComponent& playerPos,
+    float doorX,
+	float doorY,
+    float triggerDistance
+)
+{
+    float distance = Distance(
+        playerPos.x,
+        playerPos.y,
+        doorX,
+        doorY
+    );
+    return distance <= triggerDistance;
+}

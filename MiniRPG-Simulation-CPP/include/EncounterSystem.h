@@ -10,4 +10,10 @@ class EncounterSystem
             const PositionComponent& enemyPos,
             float triggerDistance
         );
+        static bool CheckExitDoorEncounter(
+            const PositionComponent& playerPos,
+            float doorX,
+            float doorY,
+            float triggerDistance
+		);
 };
