@@ -107,6 +107,7 @@ int main()
         sf::Time dt = deltaClock.restart();
         float deltaTime = dt.asSeconds();
 
+		// Event handling
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -143,6 +144,22 @@ int main()
 
                 PlayerMovementSystem::HandleRealtimeInput(playerPos, 50.0f, deltaTime);
 
+                for (const auto& enemy : enemies)
+                {
+					float dirX = playerPos.x - enemy->position.x;
+					float dirY = playerPos.y - enemy->position.y;
+
+					float distance = Distance(playerPos.x, playerPos.y, enemy->position.x, enemy->position.y);
+
+					// Simple enemy movement towards player
+                    if (distance < 5.0f && distance > 1.0f)
+                    {
+                        float moveSpeed = 2.0f;
+                        enemy->position.x += (dirX / distance) * moveSpeed * deltaTime;
+                        enemy->position.y += (dirY / distance) * moveSpeed * deltaTime;
+                    }
+                }
+
                 if (enemies.empty())
                 {
 					exitDoorUnlocked = true;
@@ -150,7 +167,6 @@ int main()
 
                 break;
             }
-
             case GameState::Combat:
             {
                 combatSystem.Update(deltaTime);
@@ -183,6 +199,9 @@ int main()
                         gameState = GameState::Exit;
                     }
                 }
+
+                //combatSystem.Render(window);
+
                 break;
             }
             case GameState::Exit:
@@ -191,8 +210,8 @@ int main()
 				break;
 			}
         }
+
         // Render
-        //window.clear(sf::Color::Green);
         window.clear(
             gameState == GameState::Exploration
             ? sf::Color::Green
@@ -240,7 +259,8 @@ int main()
                 // Convert PIXELS to WORLD units for the distance check (300 / 20 = 15)
                 float doorWorldX = doorPixelX / 20.f;
                 float doorWorldY = doorPixelY / 20.f;
-                if (EncounterSystem::CheckExitDoorEncounter(playerPos, doorWorldX, doorWorldY, 1.f))
+                if (EncounterSystem::CheckExitDoorEncounter(
+                    playerPos, doorWorldX, doorWorldY, 2.f))
                 {
                     gameState = GameState::Exit;
                 }
