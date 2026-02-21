@@ -47,7 +47,8 @@ int main()
         std::cout << "Failed to get enemy definition\n";
         return 1;
     }
-    std::vector<WorldEnemy> enemies;
+    //std::vector<WorldEnemy> enemies;
+	std::vector<std::unique_ptr<WorldEnemy>> enemies;
     enemies.reserve(5);
     for (size_t i = 0; i < 5; i++)
     {
@@ -60,19 +61,17 @@ int main()
 
         } while (Distance( playerPos.x, playerPos.y,
             enemyPos.x, enemyPos.y) < minSpawnDistance);
-        WorldEnemy enemy;
-        enemy.position = enemyPos;
-        enemy.enemyDef = enemyGoblinDef;
-        enemies.push_back(enemy);
+        //WorldEnemy enemy;
+        //enemy.position = enemyPos;
+        //enemy.enemyDef = enemyGoblinDef;
+        //enemies.push_back(enemy);
+        auto enemy = std::make_unique<WorldEnemy>();
+        enemy->position = enemyPos;
+        enemy->enemyDef = enemyGoblinDef;
+        enemies.push_back(std::move(enemy));
     }
 
     // ===== DRAW SHAPE FOR ENEMY AND PLAYER =====
-    //sf::RectangleShape playerShape(sf::Vector2f(20.f, 20.f));
-    //playerShape.setFillColor(sf::Color::Blue);
-
-    //sf::RectangleShape enemyShape(sf::Vector2f(20.f, 20.f));
-    //enemyShape.setFillColor(sf::Color::Red);
-
     sf::Sprite playerSprite;
     sf::Sprite enemySprite;
 
@@ -89,7 +88,6 @@ int main()
         enemySprite.getLocalBounds().height / 2.f
     );
 
-    //bool running = true;
     GameState gameState = GameState::Exploration;
     int currentEnemyIndex = -1;
     sf::Clock deltaClock;
@@ -99,7 +97,6 @@ int main()
     //sf::View explorationView(sf::FloatRect(0, 0, 400, 300));
     sf::View explorationView(sf::FloatRect(0, 0, 800, 600));
     sf::View combatView(sf::FloatRect(0, 0, 800, 600));
-    //window.setView(view);
 
     while (window.isOpen())
     {
@@ -128,10 +125,12 @@ int main()
                 // 1. Check for Encounters
                 for (int i = 0; i < enemies.size(); i++)
                 {
-                    if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
+                    //if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
+                    if (EncounterSystem::CheckEncounter(playerPos, enemies[i]->position, 1.5f))
                     {
                         currentEnemyIndex = i;
-                        combatSystem.BeginCombat(playerStats, enemies[currentEnemyIndex]);
+                        //combatSystem.BeginCombat(playerStats, enemies[currentEnemyIndex]);
+                        combatSystem.BeginCombat(playerStats, *enemies[currentEnemyIndex]);
                         gameState = GameState::Combat;
                         break;
                     }
@@ -202,12 +201,15 @@ int main()
 
             for (const auto& enemy : enemies)
             {
-                float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
-                float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
+                // For isometric rendering
+                //float isoX = (enemy.position.x - enemy.position.y) * 32.0f;
+                //float isoY = (enemy.position.x + enemy.position.y) * 16.0f;
+
                 //enemySprite.setPosition(centerX + enemy.position.x * 20,
                 //    centerY + enemy.position.y * 20);
                 //enemyShape.setPosition(centerX + isoX, centerY + isoY);
-                enemySprite.setPosition(enemy.position.x * 20, enemy.position.y * 20);
+                //enemySprite.setPosition(enemy.position.x * 20, enemy.position.y * 20);
+                enemySprite.setPosition(enemy->position.x * 20, enemy->position.y * 20);
                 window.draw(enemySprite);
             }
         }
