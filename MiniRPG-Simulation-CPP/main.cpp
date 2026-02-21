@@ -29,6 +29,9 @@ int main()
     defManager.LoadCharacterDef("player", "data/player.json");
     defManager.LoadCharacterDef("enemy_goblin", "data/enemy_goblin.json");
 
+    // ExitDoor
+	static bool exitDoorUnlocked = false;
+
     // === PLAYER RUNTIME STAT ===
     const CharacterDefinition* playerDefinition = defManager.GetCharacterDef("player");
     if (!playerDefinition)
@@ -139,6 +142,12 @@ int main()
                 if (gameState == GameState::Combat) break;
 
                 PlayerMovementSystem::HandleRealtimeInput(playerPos, 50.0f, deltaTime);
+
+                if (enemies.empty())
+                {
+					exitDoorUnlocked = true;
+                }
+
                 break;
             }
 
@@ -174,7 +183,13 @@ int main()
                         gameState = GameState::Exit;
                     }
                 }
+                break;
             }
+            case GameState::Exit:
+            {
+				return 0;
+				break;
+			}
         }
         // Render
         //window.clear(sf::Color::Green);
@@ -212,10 +227,32 @@ int main()
                 enemySprite.setPosition(enemy->position.x * 20, enemy->position.y * 20);
                 window.draw(enemySprite);
             }
+
+            if (exitDoorUnlocked)
+            {
+                sf::RectangleShape exitDoor({ 40.f, 40.f });
+                exitDoor.setFillColor(sf::Color::Yellow);
+                // Position in PIXELS
+                float doorPixelX = 300.f;
+                float doorPixelY = 0.f;
+                exitDoor.setPosition(doorPixelX, doorPixelY);
+                window.draw(exitDoor);
+                // Convert PIXELS to WORLD units for the distance check (300 / 20 = 15)
+                float doorWorldX = doorPixelX / 20.f;
+                float doorWorldY = doorPixelY / 20.f;
+                if (EncounterSystem::CheckExitDoorEncounter(playerPos, doorWorldX, doorWorldY, 1.f))
+                {
+                    gameState = GameState::Exit;
+                }
+            }
         }
         else if (gameState == GameState::Combat)
         {
             combatSystem.Render(window);
+        }
+		else if (gameState == GameState::Exit)
+        {
+			return 0;
         }
         window.display();
     }
