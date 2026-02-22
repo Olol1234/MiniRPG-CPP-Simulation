@@ -85,15 +85,24 @@ void CombatSystem::Update(float dt)
 	}
 	else if (combatPhase == CombatPhase::EnemyActing)
 	{
-		actionTimer = 0.0f;
-		auto& attacks = currentEnemy->enemyDef->attacks[1];
-		int dmg = CombatRules::CalculateDamage(
-			attacks.damage,
-			playerStats->characterDefinition->baseDefense
-		);
-		playerHP -= dmg;
-		if (playerHP < 0) playerHP = 0;
-		combatPhase = CombatPhase::PlayerChoosing;
+		if (enemyFrozenTurns > 0)
+		{
+			enemyFrozenTurns--;
+			actionTimer = 0.0f;
+			combatPhase = CombatPhase::PlayerChoosing;
+		}
+		else
+		{
+			actionTimer = 0.0f;
+			auto& attacks = currentEnemy->enemyDef->attacks[1];
+			int dmg = CombatRules::CalculateDamage(
+				attacks.damage,
+				playerStats->characterDefinition->baseDefense
+			);
+			playerHP -= dmg;
+			if (playerHP < 0) playerHP = 0;
+			combatPhase = CombatPhase::PlayerChoosing;
+		}
 	}
 
 	if (playerHP <= 0 || enemyHP <= 0)
@@ -144,6 +153,10 @@ void CombatSystem::ExecutePlayerAttack(int attackIndex)
 	if (enemyWet && attacks.element == "electric")
 	{
 		dmg *= 2; // Double damage if enemy is wet and attack is electric
+	}
+	else if (enemyWet && attacks.element == "ice")
+	{
+		enemyFrozenTurns = 2; // Freeze enemy for 2 turns if attack is ice
 	}
 
 	enemyHP -= dmg;

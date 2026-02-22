@@ -54,4 +54,5 @@ private:
 
 	bool playerWet;
 	bool enemyWet;
+	int enemyFrozenTurns = 0;
 };
