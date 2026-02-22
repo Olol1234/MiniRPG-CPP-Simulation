@@ -26,9 +26,14 @@ CombatSystem::CombatSystem()
 
 void CombatSystem::BeginCombat(
 	CombatStatsComponent& player,
-	WorldEnemy& enemyWorld
+	WorldEnemy& enemyWorld,
+	bool isPlayerWet,
+	bool isEnemyWet
 )
 {
+	this->playerWet = isPlayerWet;
+	this->enemyWet = isEnemyWet;
+
 	combatPhase = CombatPhase::PlayerChoosing;
 
 	playerStats = &player;
@@ -43,8 +48,8 @@ void CombatSystem::BeginCombat(
 	auto& attacks = playerStats->characterDefinition->attacks;
 	for (size_t i = 0; i < attacks.size(); ++i)
 	{
-		skillButtons.clear();
-		skillButtonTexts.clear();
+		//skillButtons.clear();
+		//skillButtonTexts.clear();
 
 		sf::RectangleShape button({ 180.f, 50.f });
 		button.setFillColor(sf::Color(80, 80, 80));
@@ -134,9 +139,12 @@ void CombatSystem::ExecutePlayerAttack(int attackIndex)
 	auto& attacks = playerStats->characterDefinition->attacks[attackIndex];
 
 	int dmg = CombatRules::CalculateDamage(
-		attacks.damage,
-		currentEnemy->enemyDef->baseDefense
-	);
+		attacks.damage, currentEnemy->enemyDef->baseDefense);
+	// Check for wet status effects
+	if (enemyWet && attacks.element == "electric")
+	{
+		dmg *= 2; // Double damage if enemy is wet and attack is electric
+	}
 
 	enemyHP -= dmg;
 	if (enemyHP < 0) enemyHP = 0;

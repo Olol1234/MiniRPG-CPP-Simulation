@@ -22,7 +22,9 @@ public:
 	CombatSystem();
 	void BeginCombat(
 		CombatStatsComponent& playerStats,
-		WorldEnemy& enemy
+		WorldEnemy& enemy,
+		bool isPlayerWet,
+		bool isEnemyWet
 	);
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
@@ -49,4 +51,7 @@ private:
 	sf::Text attackText;
 	std::vector<sf::RectangleShape> skillButtons;
 	std::vector<sf::Text> skillButtonTexts;
+
+	bool playerWet;
+	bool enemyWet;
 };
