@@ -1,7 +1,18 @@
 {
   "name": "Goblin",
   "baseMaxHP": 50,
-  "baseAttack": 8,
   "baseDefense": 5,
-  "sprite":  "data/Enemy1.png"
+  "sprite":  "data/Enemy1.png",
+  "attacks": [
+    {
+      "name": "Slash",
+      "damage": 8,
+      "element": "physical"
+    },
+    {
+      "name": "Stab",
+      "damage": 10,
+      "element": "physical"
+    }
+  ]
 }

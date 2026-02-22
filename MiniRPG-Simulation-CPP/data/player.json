@@ -1,7 +1,23 @@
 {
   "name": "Player",
   "baseMaxHP": 100,
-  "baseAttack": 25,
   "baseDefense": 5,
-  "sprite":  "data/Enemy1.png"
+  "sprite": "data/Enemy1.png",
+  "attacks": [
+    {
+      "name": "Slash",
+      "damage": 25,
+      "element": "physical"
+    },
+    {
+      "name": "Lightning Bolt",
+      "damage": 20,
+      "element": "electric"
+    },
+    {
+      "name": "Ice shard",
+      "damage": 15,
+      "element": "ice"
+    }
+  ]
 }
