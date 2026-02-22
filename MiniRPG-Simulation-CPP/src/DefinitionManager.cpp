@@ -22,9 +22,20 @@ bool DefinitionManager::LoadCharacterDef(
     CharacterDefinition def;
     def.name = j["name"];
     def.baseMaxHP = j["baseMaxHP"];
-    def.baseAttack = j["baseAttack"];
+    //def.baseAttack = j["baseAttack"];
     def.baseDefense = j["baseDefense"];
     def.spritePath = j["sprite"];
+    if (j.contains("attacks"))
+    {
+        for (const auto& attack : j["attacks"])
+        {
+			AttackInfo info;
+			info.name = attack["name"];
+			info.damage = attack["damage"];
+            info.element = attack["element"];
+			def.attacks.push_back(info);
+        }
+    }
 
     if (!def.texture.loadFromFile(def.spritePath))
     {
