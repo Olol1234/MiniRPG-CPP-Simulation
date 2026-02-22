@@ -29,6 +29,9 @@ int main()
     defManager.LoadCharacterDef("player", "data/player.json");
     defManager.LoadCharacterDef("enemy_goblin", "data/enemy_goblin.json");
 
+    // Pond Setup
+	sf::FloatRect pondArea(5.f, 5.f, 10.f, 10.f);
+
     // ExitDoor
 	static bool exitDoorUnlocked = false;
 
@@ -126,15 +129,19 @@ int main()
                 explorationView.setCenter(0, 0);
                 window.setView(explorationView);
 
-                // 1. Check for Encounters
+                // Wet logic
+                bool isPlayerWet = pondArea.contains(playerPos.x, playerPos.y);
+
+                // Check for Encounters
                 for (int i = 0; i < enemies.size(); i++)
                 {
-                    //if (EncounterSystem::CheckEncounter(playerPos, enemies[i].position, 1.5f))
+                    bool isEnemyWet = pondArea.contains(enemies[i]->position.x, 
+                        enemies[i]->position.y);
                     if (EncounterSystem::CheckEncounter(playerPos, enemies[i]->position, 1.5f))
                     {
                         currentEnemyIndex = i;
-                        //combatSystem.BeginCombat(playerStats, enemies[currentEnemyIndex]);
-                        combatSystem.BeginCombat(playerStats, *enemies[currentEnemyIndex]);
+                        combatSystem.BeginCombat(playerStats, *enemies[currentEnemyIndex], 
+                            isPlayerWet, isEnemyWet);
                         gameState = GameState::Combat;
                         break;
                     }
@@ -246,6 +253,12 @@ int main()
                 enemySprite.setPosition(enemy->position.x * 20, enemy->position.y * 20);
                 window.draw(enemySprite);
             }
+
+			// Draw Pond
+            sf::RectangleShape pondShape({ pondArea.width * 20.f, pondArea.height * 20.f });
+            pondShape.setPosition(pondArea.left * 20.f, pondArea.top * 20.f);
+            pondShape.setFillColor(sf::Color(0, 100, 255, 150));
+            window.draw(pondShape);
 
             if (exitDoorUnlocked)
             {
