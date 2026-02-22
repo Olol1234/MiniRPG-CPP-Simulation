@@ -260,7 +260,7 @@ int main()
                 float doorWorldX = doorPixelX / 20.f;
                 float doorWorldY = doorPixelY / 20.f;
                 if (EncounterSystem::CheckExitDoorEncounter(
-                    playerPos, doorWorldX, doorWorldY, 2.f))
+                    playerPos, doorWorldX, doorWorldY, 1.5f))
                 {
                     gameState = GameState::Exit;
                 }
