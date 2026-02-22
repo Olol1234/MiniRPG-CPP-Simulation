@@ -21,6 +21,7 @@ CombatSystem::CombatSystem()
 	attackText.setCharacterSize(20);
 	attackText.setFillColor(sf::Color::White);
 	attackText.setPosition(200.f, 490.f);
+
 }
 
 void CombatSystem::BeginCombat(
@@ -38,6 +39,23 @@ void CombatSystem::BeginCombat(
 
 	currentTurn = CombatTurn::Player;
 	combatFinished = false;
+
+	auto& attacks = playerStats->characterDefinition->attacks;
+	for (size_t i = 0; i < attacks.size(); ++i)
+	{
+		skillButtons.clear();
+		skillButtonTexts.clear();
+
+		sf::RectangleShape button({ 180.f, 50.f });
+		button.setFillColor(sf::Color(80, 80, 80));
+		button.setPosition(120.f + i * 190.f, 500.f);
+		skillButtons.push_back(button);
+
+		sf::Text txt(std::to_string(i+1) + ". " + attacks[i].name, font, 20);
+		txt.setFillColor(sf::Color::White);
+		txt.setPosition(130.f + i * 190.f, 510.f);
+		skillButtonTexts.push_back(txt);
+	}
 }
 
 void CombatSystem::Update(float dt)
@@ -51,16 +69,21 @@ void CombatSystem::Update(float dt)
 	//if (currentTurn == CombatTurn::Player)
 	if (combatPhase == CombatPhase::PlayerChoosing)
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-		{
-			ExecutePlayerAttack();
+		if (combatPhase == CombatPhase::PlayerChoosing) {
+			auto& attacks = playerStats->characterDefinition->attacks;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) ExecutePlayerAttack(0);
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) 
+				&& attacks.size() > 1) ExecutePlayerAttack(1);
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3) 
+				&& attacks.size() > 2) ExecutePlayerAttack(2);
 		}
 	}
 	else if (combatPhase == CombatPhase::EnemyActing)
 	{
 		actionTimer = 0.0f;
+		auto& attacks = currentEnemy->enemyDef->attacks[1];
 		int dmg = CombatRules::CalculateDamage(
-			currentEnemy->enemyDef->baseAttack,
+			attacks.damage,
 			playerStats->characterDefinition->baseDefense
 		);
 		playerHP -= dmg;
@@ -87,24 +110,31 @@ void CombatSystem::Update(float dt)
 
 void CombatSystem::HandleMouseClick(sf::Vector2f mousePos)
 {
-	//if (combatPhase != CombatPhase::PlayerChoosing)
-	//	return;
+	if (combatPhase != CombatPhase::PlayerChoosing) return;
 
-	if (attackButton.getGlobalBounds().contains(mousePos))
-	{
-		ExecutePlayerAttack();
+	//if (attackButton.getGlobalBounds().contains(mousePos))
+	//{
+		//ExecutePlayerAttack();
+	for (size_t i = 0; i < skillButtons.size(); ++i) {
+		if (skillButtons[i].getGlobalBounds().contains(mousePos)) {
+			ExecutePlayerAttack(i);
+			break;
+		}
 	}
+	//}
 }
 
-void CombatSystem::ExecutePlayerAttack()
+void CombatSystem::ExecutePlayerAttack(int attackIndex)
 {
 	if (combatPhase != CombatPhase::PlayerChoosing)
 		return;
 
 	actionTimer = 0.0f;
 
+	auto& attacks = playerStats->characterDefinition->attacks[attackIndex];
+
 	int dmg = CombatRules::CalculateDamage(
-		playerStats->characterDefinition->baseAttack,
+		attacks.damage,
 		currentEnemy->enemyDef->baseDefense
 	);
 
@@ -132,7 +162,7 @@ void CombatSystem::Render(sf::RenderWindow& window)
 	window.draw(playerSprite);
 	window.draw(enemySprite);
 
-	// === HP Bar ===
+	// === Player HP Bar ===
 	float playerHPPercent = (float)playerHP /
 		playerStats->characterDefinition->baseMaxHP;
 
@@ -147,7 +177,9 @@ void CombatSystem::Render(sf::RenderWindow& window)
 	window.draw(playerHPBarBack);
 	window.draw(playerHPBarFront);
 
-	float enemyHPPercent = (float)enemyHP / currentEnemy->enemyDef->baseMaxHP;
+	// === Enemy HP Bar ===
+	float enemyHPPercent = (float)enemyHP / 
+		currentEnemy->enemyDef->baseMaxHP;
 
 	sf::RectangleShape enemyHPBarBack({ 200.f, 20.f });
 	enemyHPBarBack.setFillColor(sf::Color(100, 100, 100));
@@ -162,9 +194,9 @@ void CombatSystem::Render(sf::RenderWindow& window)
 
 	if (combatPhase == CombatPhase::PlayerChoosing)
 	{
-		sf::RectangleShape menuBox({ 600.f, 120.f });
+		sf::RectangleShape menuBox({ 700.f, 150.f });
 		menuBox.setFillColor(sf::Color(50, 50, 50));
-		menuBox.setPosition(100.f, 450.f);
+		menuBox.setPosition(50.f, 440.f);
 
 		//sf::Text attackText("1. Attack", font, 20);
 		//attackText.setPosition(150.f, 480.f);
@@ -179,11 +211,16 @@ void CombatSystem::Render(sf::RenderWindow& window)
 		runText.setFillColor(sf::Color::Blue);
 
 		window.draw(menuBox);
-		window.draw(attackButton);
-		window.draw(attackText);
-		window.draw(defendText);
-		window.draw(runText);
-		//window.draw(menuBox);
+		//window.draw(attackButton);
+		//window.draw(attackText);
+		//window.draw(defendText);
+		//window.draw(runText);
+		for (size_t i = 0; i < skillButtons.size(); ++i)
+		{
+			window.draw(skillButtons[i]);
+			if (i < skillButtonTexts.size())
+				window.draw(skillButtonTexts[i]);
+		}
 	}
 }
 
