@@ -156,7 +156,11 @@ void CombatSystem::ExecutePlayerAttack(int attackIndex)
 	}
 	else if (enemyWet && attacks.element == "ice")
 	{
-		enemyFrozenTurns = 2; // Freeze enemy for 2 turns if attack is ice
+		int chanceToFreeze = std::rand() % 100 + 1;
+		if (chanceToFreeze <= 20)
+		{
+			enemyFrozenTurns = 2;
+		}
 	}
 
 	enemyHP -= dmg;
@@ -212,6 +216,15 @@ void CombatSystem::Render(sf::RenderWindow& window)
 
 	window.draw(enemyHPBarBack);
 	window.draw(enemyHPBarFront);
+
+	// === Enemy Status Effects ===
+	if (enemyFrozenTurns > 0)
+	{
+		sf::RectangleShape frozenIcon({ 20.f, 20.f });
+		frozenIcon.setFillColor(sf::Color::Blue);
+		frozenIcon.setPosition(540.f, 110.f);
+		window.draw(frozenIcon);
+	}
 
 	if (combatPhase == CombatPhase::PlayerChoosing)
 	{
